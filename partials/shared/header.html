@@ -13,9 +13,9 @@
                         <h1 class="banner__title">Sol's RNG Rolling Simulator</h1>
                     </div>
                     <div class="banner__subtitle masthead-console__metadata">
-                        <button type="button" class="banner__version-button masthead-console__meta-card masthead-console__meta-card--version masthead-console__version" id="versionInfoButton" aria-haspopup="dialog" aria-expanded="false" data-version-id="v2.221">
+                        <button type="button" class="banner__version-button masthead-console__meta-card masthead-console__meta-card--version masthead-console__version" id="versionInfoButton" aria-haspopup="dialog" aria-expanded="false" data-version-id="v2.222">
                             <i class="fa-solid fa-code-branch" aria-hidden="true"></i>
-                            <span><small>Current build</small><strong>Version 2.221</strong></span>
+                            <span><small>Current build</small><strong>Version 2.222</strong></span>
                         </button>
                         <span class="masthead-console__meta-card banner__subtitle-author">
                             <span class="masthead-console__creator-avatar-flip" aria-hidden="true">
@@ -31,9 +31,15 @@
                                 </span>
                             </span>
                         </span>
-                        <span class="masthead-console__meta-card banner__subtitle-updated">
-                            <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
-                            <span><small>Latest deployment</small><time id="latestDeploymentTime" aria-live="polite">Checking published deployment…</time></span>
+                        <span class="masthead-console__deployment">
+                            <span class="masthead-console__meta-card banner__subtitle-updated">
+                                <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+                                <span><small>Latest deployment</small><time id="latestDeploymentTime" aria-live="polite">Checking published deployment…</time></span>
+                            </span>
+                            <button type="button" class="masthead-console__meta-card masthead-console__issue-button" id="issueGuideButton" aria-label="Create an Issue" aria-haspopup="dialog" aria-controls="issueGuideDialog">
+                                <i class="fa-brands fa-github" aria-hidden="true"></i>
+                            </button>
+                            <span class="masthead-console__issue-tooltip" aria-hidden="true">Create an Issue</span>
                         </span>
                         <span class="masthead-console__meta-card banner__subtitle-eon">
                             <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
@@ -53,4 +59,23 @@
                 {{pageControls}}
             </div>
             <span class="masthead-console__status"><i class="fa-solid fa-signal" aria-hidden="true"></i> Systems online</span>
+            <dialog class="issue-guide" id="issueGuideDialog" aria-labelledby="issueGuideTitle" closedby="any">
+                <h2 id="issueGuideTitle" tabindex="-1" autofocus>How to report an issue</h2>
+                <h3>Title</h3>
+                <p>Say what broke and when. For example, “Roll button freezes after a biome change.”</p>
+                <h3>Description</h3>
+                <p>List the steps to reproduce it, what you expected, and what happened. Add your device, browser, and simulator version, plus any screenshots or error messages.</p>
+                <h3>Labels</h3>
+                <ul class="issue-guide__labels" role="list">
+                    <li class="issue-guide__label--bug"><strong>Bug</strong> for something that isn’t working.</li>
+                    <li class="issue-guide__label--fatal"><strong>Fatal Bug</strong> for game-breaking issues.</li>
+                    <li class="issue-guide__label--help"><strong>Help</strong> when more details are needed.</li>
+                    <li class="issue-guide__label--wont-fix"><strong>Won't Fix</strong> is a maintainer decision.</li>
+                </ul>
+                <p>If labels are unavailable, include the issue type in your description.</p>
+                <form class="issue-guide__actions" method="dialog">
+                    <button type="submit">Close</button>
+                    <a href="https://github.com/NotTheUnnamed/Sols-Rolling-Calculator/issues/new" target="_blank" rel="noopener" aria-label="Open GitHub issue (opens in a new tab)">Open GitHub issue</a>
+                </form>
+            </dialog>
         </header>

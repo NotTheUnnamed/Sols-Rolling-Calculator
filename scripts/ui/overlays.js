@@ -218,6 +218,38 @@
     global.initializePopupConsoleChrome = initializePopupConsoleChrome;
 
     if (typeof document !== 'undefined') {
+        const issueButton = document.getElementById('issueGuideButton');
+        const issueGuide = document.getElementById('issueGuideDialog');
+        if (issueButton) {
+            const tooltipAnchor = issueButton.parentElement;
+            const positionTooltip = event => {
+                const { left, width } = tooltipAnchor.getBoundingClientRect();
+                const percentPerPixel = 100 / width;
+                const spaceToEdge = Math.min(event.clientX, document.documentElement.clientWidth - event.clientX);
+                tooltipAnchor.style.setProperty('--issue-tooltip-x', `${(event.clientX - left) * percentPerPixel}%`);
+                tooltipAnchor.style.setProperty('--issue-tooltip-max-width', `${2 * spaceToEdge * percentPerPixel}%`);
+            };
+            issueButton.addEventListener('pointerenter', positionTooltip);
+            issueButton.addEventListener('pointermove', positionTooltip);
+            issueButton.addEventListener('click', () => issueGuide?.showModal());
+        }
+
+        if (issueGuide && !('closedBy' in issueGuide)) {
+            let pressedBackdrop = false;
+            const isBackdrop = event => {
+                if (event.target !== issueGuide) return false;
+                const { left, right, top, bottom } = issueGuide.getBoundingClientRect();
+                return event.clientX < left || event.clientX >= right || event.clientY < top || event.clientY >= bottom;
+            };
+            issueGuide.addEventListener('pointerdown', event => {
+                pressedBackdrop = isBackdrop(event);
+            });
+            issueGuide.addEventListener('click', event => {
+                if (pressedBackdrop && isBackdrop(event)) issueGuide.close();
+                pressedBackdrop = false;
+            });
+        }
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => initializePopupConsoleChrome(), { once: true });
         } else {

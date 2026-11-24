@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '../..');
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
     '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml' };
 
-test('v2.221 simulator and aura pages', { timeout: 60000 }, async t => {
+test('v2.222 simulator and aura pages', { timeout: 60000 }, async t => {
     const server = http.createServer(async (request, response) => {
         try {
             const url = new URL(request.url, 'http://localhost');
@@ -255,20 +255,78 @@ test('v2.221 simulator and aura pages', { timeout: 60000 }, async t => {
         assert.equal(checks, 22 * 2 * 2 * 2);
     });
 
-    await t.test('release notes include v2.221 under v2.220 and fit a mobile viewport', async () => {
-        assert.equal(await page.locator('meta[name="app-build"]').getAttribute('content'), '2.221');
+    await t.test('release notes include v2.222 and v2.221 under v2.220 and fit a mobile viewport', async () => {
+        assert.equal(await page.locator('meta[name="app-build"]').getAttribute('content'), '2.222');
         if (await page.locator('#versionChangelogOverlay').getAttribute('hidden') !== null) {
             await page.locator('#versionInfoButton').click();
         }
         await page.locator('#changelog-panel-v2220').waitFor({ state: 'visible' });
         assert.equal(await page.locator('#changelog-panel-v2220 .changelog-eon130__auras > li').count(), 16);
-        const subupdate = page.locator('#changelog-panel-v2220 .changelog-subupdate-card');
-        assert.equal(await subupdate.locator('.changelog-subupdate-card__version').textContent(), 'v2.221');
+        const subupdates = page.locator('#changelog-panel-v2220 .changelog-subupdate-card');
+        assert.deepEqual(await subupdates.locator('.changelog-subupdate-card__version').allTextContents(), ['v2.222', 'v2.221']);
+        const subupdate = subupdates.filter({ has: page.locator('.changelog-subupdate-card__version', { hasText: 'v2.222' }) });
         await subupdate.click();
         await subupdate.locator('.changelog-modal__list--sub').waitFor({ state: 'visible' });
         await page.setViewportSize({ width: 390, height: 844 });
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
         assert.ok(overflow <= 1, `Mobile horizontal overflow: ${overflow}px`);
+    });
+
+    await t.test('the GitHub button reveals beside deployment and opens a narrow-screen guide', async () => {
+        await page.evaluate(() => localStorage.setItem('solsRollingCalculator:fullscreenCutscenePrompt:v2.216', 'true'));
+        await page.setViewportSize({ width: 1440, height: 1000 });
+        await page.goto(origin, { waitUntil: 'domcontentloaded' });
+
+        const issue = page.getByRole('button', { name: 'Create an Issue', exact: true });
+        const deployment = page.locator('.banner__subtitle-updated');
+        const tooltip = page.getByText('Create an Issue', { exact: true });
+        await tooltip.waitFor({ state: 'hidden' });
+        await page.waitForFunction(() => getComputedStyle(document.getElementById('issueGuideButton')).opacity === '0');
+        await deployment.hover();
+        await tooltip.waitFor({ state: 'hidden' });
+        await page.waitForFunction(() => getComputedStyle(document.getElementById('issueGuideButton')).opacity === '1');
+        const deploymentBox = await deployment.boundingBox();
+        const issueBox = await issue.boundingBox();
+        assert.ok(issueBox.x > deploymentBox.x + deploymentBox.width);
+        await issue.hover();
+        await tooltip.waitFor({ state: 'visible' });
+        for (const x of [issueBox.x + 8, issueBox.x + issueBox.width - 8]) {
+            await page.mouse.move(x, issueBox.y + issueBox.height / 2);
+            const tooltipBox = await tooltip.boundingBox();
+            assert.ok(Math.abs(tooltipBox.x + tooltipBox.width / 2 - x) <= 1);
+        }
+
+        await page.mouse.move(0, 0);
+        await tooltip.waitFor({ state: 'hidden' });
+        await page.setViewportSize({ width: 320, height: 568 });
+        const guide = page.getByRole('dialog', { name: 'How to report an issue' });
+        await page.locator('.banner__subtitle-author-name a').focus();
+        await page.keyboard.press('Tab');
+        await tooltip.waitFor({ state: 'visible' });
+        await page.keyboard.press('Enter');
+        await guide.waitFor({ state: 'visible' });
+        assert.equal(await guide.evaluate(dialog => dialog.scrollHeight <= dialog.clientHeight), true);
+        assert.deepEqual(await guide.getByRole('heading', { level: 3 }).allTextContents(), ['Title', 'Description', 'Labels']);
+        assert.deepEqual(await guide.locator('li strong').allTextContents(), ['Bug', 'Fatal Bug', 'Help', "Won't Fix"]);
+
+        const github = guide.getByRole('link', { name: /open github issue/i });
+        assert.equal(await github.getAttribute('href'), 'https://github.com/NotTheUnnamed/Sols-Rolling-Calculator/issues/new');
+        assert.equal(await github.getAttribute('target'), '_blank');
+        await page.keyboard.press('Escape');
+        await guide.waitFor({ state: 'hidden' });
+        assert.equal(await issue.evaluate(button => button === document.activeElement), true);
+
+        await issue.press('Enter');
+        await guide.waitFor({ state: 'visible' });
+        const guideBox = await guide.boundingBox();
+        await page.mouse.click(guideBox.x + 3, guideBox.y + 3);
+        assert.ok(await guide.isVisible());
+        await page.mouse.click(1, 1);
+        await guide.waitFor({ state: 'hidden' });
+
+        await issue.press('Enter');
+        await guide.getByRole('button', { name: 'Close' }).click();
+        await guide.waitFor({ state: 'hidden' });
     });
 
     await t.test('directory search resolves one canonical Phasmophobia profile', async () => {
@@ -284,7 +342,7 @@ test('v2.221 simulator and aura pages', { timeout: 60000 }, async t => {
             await page.goto(`${origin}/auras/${slug}/`, { waitUntil: 'domcontentloaded' });
             await page.waitForFunction(() => document.documentElement.dataset.auraLayout !== 'loading');
             assert.equal(await page.locator('article.aura-detail').count(), 1, slug);
-            assert.match(await page.locator('#versionInfoButton').innerText(), /2\.221/);
+            assert.match(await page.locator('#versionInfoButton').innerText(), /2\.222/);
             if (slug === 'hollow') assert.match(await page.locator('body').innerText(), /2,666,666,666/);
             if (slug === 'sinister-p') {
                 assert.match(await page.locator('body').innerText(), /Obtainment details are awaiting documentation/);
