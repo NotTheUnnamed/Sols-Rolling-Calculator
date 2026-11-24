@@ -11318,8 +11318,8 @@ function setupDonationFloatToggle() {
     const setCollapsed = collapsed => {
         donationFloat.classList.toggle('donation-float--collapsed', collapsed);
         toggleButton.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-        toggleButton.setAttribute('aria-label', collapsed ? 'Expand donation card' : 'Minimize donation card');
-        toggleButton.title = collapsed ? 'Expand' : 'Minimize';
+        toggleButton.setAttribute('aria-label', collapsed ? 'Expand community supporters card' : 'Minimize community supporters card');
+        toggleButton.title = collapsed ? 'Show community supporters' : 'Minimize community supporters';
         donationLink.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
         donationLink.tabIndex = collapsed ? -1 : 0;
     };
