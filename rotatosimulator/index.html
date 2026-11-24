@@ -151,7 +151,7 @@
         })();
     </script>
     <link rel="stylesheet" href="styles/core/base.css?v=2.222">
-    <link rel="stylesheet" href="styles/core/layout.css?v=2.222">
+    <link rel="stylesheet" href="styles/core/layout.css?v=2.222.supporters1">
     <link rel="stylesheet" href="styles/components/components.css?v=2.222.buffs1">
     <link rel="stylesheet" href="styles/core/utilities.css?v=2.222.notes2.issue2">
     <link rel="stylesheet" href="styles/titles/wiki-title-fonts.css?v=2.222">
@@ -184,7 +184,7 @@
     <script src="scripts/auras/aura-title-layout.js?v=2.222" defer></script>
     <script src="scripts/ui/biome-background.js?v=2.222" defer></script>
     <script src="scripts/ui/result-summary.js?v=2.222" defer></script>
-    <script src="scripts/simulator/main.js?v=2.222.layout4" defer></script>
+    <script src="scripts/simulator/main.js?v=2.222.layout4.supporters1" defer></script>
     <script src="scripts/core/session-return.js?v=2.222.restore2" defer></script>
     <script src="scripts/ui/potato-portal.js?v=2.222.portal3" defer></script>
     <script src="scripts/auras/aura-video-player.js?v=2.222" defer></script>
@@ -1712,44 +1712,50 @@
             id="donationFloatToggle"
             aria-controls="donationFloatLink"
             aria-expanded="true"
-            aria-label="Minimize donation card"
+            aria-label="Minimize community supporters card"
             title="Minimize"
         >
             <span class="donation-float__toggle-icon donation-float__toggle-icon--collapse" aria-hidden="true">
                 <i class="fa-solid fa-minus"></i>
             </span>
             <span class="donation-float__toggle-icon donation-float__toggle-icon--expand" aria-hidden="true">
-                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <i class="fa-solid fa-users"></i>
             </span>
         </button>
-        <div class="donation-float__link" id="donationFloatLink" role="region" aria-label="Recent donation list">
+        <div class="donation-float__link" id="donationFloatLink" role="region" aria-labelledby="communitySupportersTitle">
             <span class="donation-float__rail" aria-hidden="true">
                 <span>Support // 02</span>
-                <span>2 recent entries</span>
+                <span>Donors &amp; boosters</span>
             </span>
             <span class="donation-float__icon" aria-hidden="true">
-                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <i class="fa-solid fa-users"></i>
             </span>
-            <span class="donation-float__content">
-                <span class="donation-float__eyebrow">Community ledger</span>
-                <span class="donation-float__label">Recent donations</span>
-                <span class="donation-float__list">
-                    <span class="donation-float__list-head" aria-hidden="true">
-                        <span>Supporter</span>
-                        <span>Amount</span>
-                    </span>
-                    <span class="donation-float__donor">
-                        <span class="donation-float__donor-avatar" aria-hidden="true">C</span>
-                        <span class="donation-float__donor-name">Chesser</span>
-                        <span class="donation-float__amount">$5</span>
-                    </span>
-                    <span class="donation-float__donor">
-                        <span class="donation-float__donor-avatar" aria-hidden="true">SSR</span>
-                        <span class="donation-float__donor-name">Stoopid Sols Rat</span>
-                        <span class="donation-float__amount">$1</span>
-                    </span>
-                </span>
-            </span>
+            <div class="donation-float__content">
+                <h2 class="donation-float__label" id="communitySupportersTitle">Community supporters</h2>
+                <section aria-labelledby="recentDonationsTitle">
+                    <h3 class="donation-float__section-title" id="recentDonationsTitle">Recent donations</h3>
+                    <div class="donation-float__list">
+                        <span class="donation-float__list-head" aria-hidden="true">
+                            <span>Supporter</span>
+                            <span>Amount</span>
+                        </span>
+                        <span class="donation-float__donor">
+                            <span class="donation-float__donor-avatar" aria-hidden="true">C</span>
+                            <span class="donation-float__donor-name">Chesser</span>
+                            <span class="donation-float__amount">$5</span>
+                        </span>
+                        <span class="donation-float__donor">
+                            <span class="donation-float__donor-avatar" aria-hidden="true">SSR</span>
+                            <span class="donation-float__donor-name">Stoopid Sols Rat</span>
+                            <span class="donation-float__amount">$1</span>
+                        </span>
+                    </div>
+                </section>
+                <section aria-labelledby="serverBoostersTitle">
+                    <h3 class="donation-float__section-title" id="serverBoostersTitle">Server Boosters</h3>
+                    <p class="donation-float__meta">No server boosters listed yet.</p>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -2215,13 +2221,14 @@
                             <article class="changelog-subupdate-card">
                                 <header class="changelog-subupdate-card__header">
                                     <span class="changelog-subupdate-card__version">v2.222</span>
-                                    <span class="changelog-subupdate-card__title changelog-tab__subtitle">GitHub issue shortcut</span>
+                                    <span class="changelog-subupdate-card__title changelog-tab__subtitle">GitHub issues and community supporters</span>
                                     <p class="changelog-subupdate-card__meta">Updated 2026/11/24</p>
                                 </header>
                                 <ul class="changelog-modal__list changelog-modal__list--sub">
                                     <li>Hover over Latest deployment to reveal the GitHub icon. Hover over the icon for a “Create an Issue” tooltip centered on your cursor, or focus the icon with the keyboard. On touch screens, the icon stays visible beside the deployment card.</li>
                                     <li>The issue guide includes a sample title, a description checklist, and color-coded GitHub labels. Use Open GitHub issue to start your report in a new tab.</li>
                                     <li>Click or tap outside the issue guide to close it.</li>
+                                    <li>The floating Community supporters card now has separate sections for recent donations and Discord Server Boosters.</li>
                                 </ul>
                             </article>
                             <article class="changelog-subupdate-card">

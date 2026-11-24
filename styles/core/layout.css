@@ -2375,12 +2375,6 @@
     min-width: 0;
 }
 
-.donation-float__eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.24em;
-    color: rgba(231, 227, 255, 0.78);
-}
-
 .donation-float__label {
     font-size: 14px;
     color: #f8f5ff;
@@ -3316,21 +3310,22 @@ body.quality-no-ui-animations .resource-link__click-value {
     transform: translateY(-2px);
 }
 
-.support-float__content,
-.donation-float__content {
+.support-float__content {
     gap: 5px;
 }
 
-.support-float__eyebrow,
-.donation-float__eyebrow {
+.donation-float__content {
+    gap: 12px;
+}
+
+.support-float__eyebrow {
     gap: 7px;
     color: rgb(var(--float-card-accent-soft-rgb) / 0.7);
     font-size: 7px;
     letter-spacing: 0.19em;
 }
 
-.support-float__eyebrow::before,
-.donation-float__eyebrow::before {
+.support-float__eyebrow::before {
     width: 5px;
     height: 5px;
     flex-basis: 5px;
@@ -3378,13 +3373,29 @@ body.quality-no-ui-animations .resource-link__click-value {
     transform: translateX(3px);
 }
 
+.donation-float__label,
+.donation-float__section-title {
+    margin: 0;
+}
+
+.donation-float__section-title {
+    color: rgb(var(--float-card-accent-soft-rgb) / 0.92);
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+.donation-float__meta {
+    margin: 5px 0 0;
+    letter-spacing: 0.035em;
+}
+
 .donation-float__list {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
     width: 100%;
     min-width: 0;
-    margin-top: 8px;
+    margin-top: 5px;
     border-top: 1px solid rgb(var(--float-card-accent-rgb) / 0.22);
     border-bottom: 1px solid rgb(var(--float-card-accent-rgb) / 0.16);
 }
@@ -3738,5 +3749,13 @@ body.quality-no-ui-animations .resource-link__click-value {
 @media (max-height: 560px) and (orientation: landscape) {
     .support-float__qr-sheet {
         border-radius: 0;
+    }
+}
+
+@media (max-height: 420px) {
+    .donation-float:not(.donation-float--collapsed) .donation-float__link {
+        min-height: 0;
+        max-height: calc(100dvh - max(90px, env(safe-area-inset-bottom) + 82px));
+        overflow-y: auto;
     }
 }

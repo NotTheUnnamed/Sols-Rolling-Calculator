@@ -329,6 +329,21 @@ test('v2.222 simulator and aura pages', { timeout: 60000 }, async t => {
         await guide.waitFor({ state: 'hidden' });
     });
 
+    await t.test('the community supporters card shows donations and an empty Server Boosters section', async () => {
+        const toggle = page.getByRole('button', { name: 'Expand community supporters card' });
+        const supporters = page.getByRole('region', { name: 'Community supporters' });
+        await toggle.click();
+        await supporters.waitFor({ state: 'visible' });
+
+        const donations = supporters.getByRole('region', { name: 'Recent donations' });
+        assert.deepEqual(await donations.locator('.donation-float__donor-name').allTextContents(), ['Chesser', 'Stoopid Sols Rat']);
+        assert.deepEqual(await donations.locator('.donation-float__amount').allTextContents(), ['$5', '$1']);
+        assert.equal(await supporters.getByRole('region', { name: 'Server Boosters' }).locator('p').textContent(), 'No server boosters listed yet.');
+
+        await page.getByRole('button', { name: 'Minimize community supporters card' }).click();
+        await supporters.waitFor({ state: 'hidden' });
+    });
+
     await t.test('directory search resolves one canonical Phasmophobia profile', async () => {
         await page.setViewportSize({ width: 1440, height: 1000 });
         await page.goto(origin + '/auras/', { waitUntil: 'domcontentloaded' });
