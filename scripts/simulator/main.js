@@ -293,6 +293,27 @@ function maybeShowChangelogOnFirstVisit() {
     }
 }
 
+function showStartupNotices() {
+    const finish = () => {
+        maybeShowChangelogOnFirstVisit();
+        cutsceneWarningManager.initialize();
+    };
+    const warning = document.getElementById('photosensitivityWarning');
+    const storageKey = 'solsRollingCalculator:photosensitivityWarningAcknowledged';
+    let acknowledged = false;
+    try { acknowledged = localStorage.getItem(storageKey) === 'true'; } catch {}
+    if (acknowledged || typeof warning?.showModal !== 'function') {
+        finish();
+        return;
+    }
+    warning.addEventListener('cancel', event => event.preventDefault());
+    warning.addEventListener('close', () => {
+        try { localStorage.setItem(storageKey, 'true'); } catch {}
+        finish();
+    }, { once: true });
+    warning.showModal();
+}
+
 function hydrateBackgroundRollingPreference() {
     if (typeof window === 'undefined') {
         return;
@@ -810,7 +831,8 @@ const EVENT_BUFF_TOGGLES = Object.freeze({
     dorcelessness: 'dorcelessness-luck-toggle',
     sorry: 'sorry-luck-toggle',
     yg: 'yg-blessing-toggle',
-    astrald: 'astrald-blessing-toggle'
+    astrald: 'astrald-blessing-toggle',
+    ado: 'ado-blessing-toggle'
 });
 let radiantForestState = SimulationCore.createRadiantState();
 let radiantMoonSoundMask = 0;
@@ -2323,6 +2345,7 @@ function showAppNotification(message, { id = 'general', duration = 2800 } = {}) 
 function initializeAudioKeyboardShortcuts() {
     document.addEventListener('keydown', event => {
         if (event.defaultPrevented || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.isComposing) return;
+        if (document.getElementById('photosensitivityWarning')?.open) return;
         if (event.target.closest?.('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"], [role="slider"]')) return;
         if (event.code === 'KeyM') {
             event.preventDefault();
@@ -2542,7 +2565,7 @@ function initializeRollTriggerFloating() {
         if (!shortcutPressed || event.defaultPrevented || event.repeat) return;
 
         const blockingLayerOpen = Boolean(document.querySelector(
-            '.modal-overlay:not([hidden]), .cutscene-warning-overlay:not([hidden]), #introOverlay:not([hidden])'
+            '.modal-overlay:not([hidden]), .cutscene-warning-overlay:not([hidden]), #introOverlay:not([hidden]), #photosensitivityWarning[open]'
         ));
         if (blockingLayerOpen || isAuraCutscenePlaybackActive() || simulationActive || rollTriggerButton.disabled) return;
 
@@ -2565,6 +2588,7 @@ function initializeRollTriggerFloating() {
 }
 
 function beginSimulationExperience() {
+    if (experienceStarted || document.getElementById('photosensitivityWarning')?.open) return;
     const overlay = document.getElementById('introOverlay');
     const startButton = document.getElementById('startExperienceButton');
     const bgMusic = document.getElementById('ambientMusic');
@@ -2597,8 +2621,9 @@ function initializeIntroOverlay() {
     const startButton = document.getElementById('startExperienceButton');
     if (!overlay || !startButton) {
         let interactionArmed = true;
-        const startFromInteraction = () => {
-            if (!interactionArmed) return;
+        const startFromInteraction = event => {
+            if (!interactionArmed || document.getElementById('photosensitivityWarning')?.open
+                || (event.target instanceof Element && event.target.closest('#ado-radio-play'))) return;
             interactionArmed = false;
             document.removeEventListener('pointerdown', startFromInteraction, true);
             document.removeEventListener('touchstart', startFromInteraction, true);
@@ -3078,21 +3103,13 @@ const glitchUiState = {
     pitchTargetRate: null,
     entryErrorTimeoutId: null,
     entryErrorFrameId: null,
-    distortionNode: null,
-    waveShaper: null,
-    stereoPannerNode: null,
-    ditherSourceNode: null,
-    ditherGainNode: null,
-    gainNode: null,
-    sourceNode: null,
-    sourceElement: null,
+    audioTarget: null,
     mediaPlaybackSnapshot: null,
-    audioCorruptionProfile: null,
     isUiGlitching: false,
-    audioPipelineMode: null,
     presentationMode: 'disabled'
 };
 
+const glitchAudioChains = new WeakMap();
 let glitchPresentationEnabled = false;
 
 function getAudioContextHandle() {
@@ -3438,27 +3455,23 @@ function computeEffectiveBackgroundVolume(bgMusic) {
 }
 
 function synchronizeBackgroundRouting(bgMusic) {
-    if (!bgMusic) {
-        return { baseVolume: 0.18, chain: null };
-    }
+    if (!bgMusic) return null;
 
     const baseVolume = computeEffectiveBackgroundVolume(bgMusic);
-    const chain = ensureGlitchAudioChain(bgMusic);
+    const chain = ensureGlitchAudioChain(bgMusic, baseVolume);
+    if (chain) setGlitchMusicGain(chain, baseVolume);
+    bgMusic.volume = chain ? 1 : baseVolume;
+    return chain;
+}
 
-    if (chain && chain.gainNode) {
-        chain.baseGain = baseVolume;
-        const context = chain.context;
-        if (context && typeof chain.gainNode.gain.setTargetAtTime === 'function') {
-            chain.gainNode.gain.setTargetAtTime(baseVolume, context.currentTime, 0.01);
-        } else {
-            chain.gainNode.gain.value = baseVolume;
-        }
-        bgMusic.volume = 1;
-    } else {
-        bgMusic.volume = baseVolume;
-    }
+let adoConcertBaseVolume = 0;
 
-    return { baseVolume, chain };
+function routeAdoConcertVolume(video, volume) {
+    adoConcertBaseVolume = volume;
+    const chain = glitchAudioChains.get(video);
+    if (!chain) return volume;
+    setGlitchMusicGain(chain, volume);
+    return 1;
 }
 
 function ensureBackgroundMusicSource(bgMusic) {
@@ -3486,6 +3499,7 @@ function ensureBackgroundMusicSource(bgMusic) {
 
 function primeBackgroundMusic(bgMusic) {
     if (!bgMusic) return;
+    if (enabledEvents.has('ado26')) { bgMusic.pause(); return; }
 
     ensureBackgroundMusicSource(bgMusic);
     synchronizeBackgroundRouting(bgMusic);
@@ -3531,7 +3545,19 @@ function updateAuraMusicPlayback() {
     const music = document.getElementById('ambientMusic');
     if (auraFloatingPlaybackActive || auraLocalPlaybackActive || auraVideoShellActive) music?.pause();
     else startBackgroundMusic(music);
+    syncAdoConcertMusic();
 }
+function syncAdoConcertMusic() {
+    globalThis.AdoConcertMusic?.sync({
+        active: enabledEvents.has('ado26'),
+        playing: experienceStarted && !auraFloatingPlaybackActive && !auraLocalPlaybackActive
+            && !auraVideoShellActive && !appState.videoPlaying && isSoundChannelActive('music'),
+        volume: getChannelVolumeMultiplier('music') * 0.25,
+        routeVolume: routeAdoConcertVolume
+    });
+    updateGlitchAudioControls();
+}
+document.addEventListener('aura-audio-settings-change', syncAdoConcertMusic);
 document.addEventListener('aura-floating-playback', event => {
     auraFloatingPlaybackActive = Boolean(event.detail?.active);
     updateAuraMusicPlayback();
@@ -3545,6 +3571,11 @@ document.addEventListener('aura-video-shell-state', event => {
     updateAuraMusicPlayback();
 });
 function startBackgroundMusic(bgMusic) {
+    if (enabledEvents.has('ado26')) {
+        bgMusic?.pause();
+        syncAdoConcertMusic();
+        return;
+    }
     if (auraFloatingPlaybackActive || auraLocalPlaybackActive || auraVideoShellActive || !bgMusic || !experienceStarted || !isSoundChannelActive('music')) return;
 
     primeBackgroundMusic(bgMusic);
@@ -4349,28 +4380,22 @@ function setGlitchPitchPreservation(audioElement, enabled) {
     }
 }
 
-function restoreGlitchMediaPlayback(audioElement, fallbackVolume) {
+function restoreGlitchMediaPlayback() {
     const snapshot = glitchUiState.mediaPlaybackSnapshot;
-    const targetElement = snapshot?.element || audioElement;
-    if (!targetElement) {
-        glitchUiState.mediaPlaybackSnapshot = null;
-        return;
-    }
+    if (!snapshot) return;
 
-    targetElement.playbackRate = snapshot?.playbackRate ?? 1;
-    if (snapshot?.preservesPitch !== undefined && 'preservesPitch' in targetElement) {
+    const targetElement = snapshot.element;
+    targetElement.playbackRate = snapshot.playbackRate;
+    if (snapshot.preservesPitch !== undefined && 'preservesPitch' in targetElement) {
         targetElement.preservesPitch = snapshot.preservesPitch;
     }
-    if (snapshot?.webkitPreservesPitch !== undefined && 'webkitPreservesPitch' in targetElement) {
+    if (snapshot.webkitPreservesPitch !== undefined && 'webkitPreservesPitch' in targetElement) {
         targetElement.webkitPreservesPitch = snapshot.webkitPreservesPitch;
     }
-    if (snapshot?.mozPreservesPitch !== undefined && 'mozPreservesPitch' in targetElement) {
+    if (snapshot.mozPreservesPitch !== undefined && 'mozPreservesPitch' in targetElement) {
         targetElement.mozPreservesPitch = snapshot.mozPreservesPitch;
     }
 
-    if (Number.isFinite(fallbackVolume)) {
-        targetElement.volume = clamp01(fallbackVolume);
-    }
     glitchUiState.mediaPlaybackSnapshot = null;
     glitchUiState.pitchTargetRate = null;
 }
@@ -4390,74 +4415,60 @@ function easeGlitchPitch(bgMusic, targetRate, duration) {
     step();
 }
 
-function scheduleGlitchWarbleCycle(bgMusic, chain) {
-    if (!bgMusic || !glitchUiState.isUiGlitching) return;
+function scheduleGlitchWarbleCycle(music, chain) {
+    if (glitchUiState.audioTarget !== music || !shouldUseGlitchBaseEffect()) return;
 
     resetGlitchWarbleTimer();
 
     const reducedGlitch = Boolean(appState.qualityPreferences?.reduceGlitchEffects);
-    const baseGain = computeEffectiveBackgroundVolume(bgMusic);
     const cycleDuration = Math.floor(reducedGlitch ? randomDecimalBetween(55, 85) : randomDecimalBetween(24, 40));
-    const previousTarget = glitchUiState.pitchTargetRate ?? bgMusic.playbackRate;
-    const pitchSteps = reducedGlitch
-        ? (previousTarget >= 1 ? [-4, -2] : [2, 4])
-        : (previousTarget >= 1 ? [-24, -17, -12] : [12, 17, 24]);
-    const semitones = pitchSteps[Math.floor(Math.random() * pitchSteps.length)];
+    const musicHasVideo = music instanceof HTMLVideoElement;
+    if (!musicHasVideo) {
+        const previousTarget = glitchUiState.pitchTargetRate ?? music.playbackRate;
+        const pitchSteps = reducedGlitch
+            ? (previousTarget >= 1 ? [-4, -2] : [2, 4])
+            : (previousTarget >= 1 ? [-24, -17, -12] : [12, 17, 24]);
+        const semitones = pitchSteps[Math.floor(Math.random() * pitchSteps.length)];
+        captureGlitchMediaPlayback(music);
+        setGlitchPitchPreservation(music, false);
+        glitchUiState.pitchTargetRate = 2 ** (semitones / 12);
+        easeGlitchPitch(music, glitchUiState.pitchTargetRate, cycleDuration * 0.85);
+    }
 
-    captureGlitchMediaPlayback(bgMusic);
-    setGlitchPitchPreservation(bgMusic, false);
-    glitchUiState.pitchTargetRate = 2 ** (semitones / 12);
-    easeGlitchPitch(bgMusic, glitchUiState.pitchTargetRate, cycleDuration * 0.85);
-
-    if (chain?.context && chain.gainNode) {
-        const context = chain.context;
-        const now = context.currentTime;
+    if (chain) {
+        const now = chain.context.currentTime;
         const gainParam = chain.gainNode.gain;
+        const { filter, panner, noiseGain } = chain.effect;
+        // Stutter the video soundtrack without changing its playback speed.
+        const volumeScale = musicHasVideo ? randomDecimalBetween(reducedGlitch ? 0.76 : 0.28, 1) : 1;
+        gainParam.cancelScheduledValues(now);
+        gainParam.setTargetAtTime(chain.baseGain * volumeScale, now, 0.008);
 
-        if (typeof gainParam.cancelScheduledValues === 'function') {
-            gainParam.cancelScheduledValues(now);
-        }
-        if (typeof gainParam.setTargetAtTime === 'function') {
-            gainParam.setTargetAtTime(baseGain, now, 0.008);
-        } else if (typeof gainParam.setValueAtTime === 'function') {
-            gainParam.setValueAtTime(baseGain, now);
-        } else {
-            gainParam.value = baseGain;
-        }
+        const targetFrequency = reducedGlitch ? randomDecimalBetween(180, 620) : randomDecimalBetween(220, 1900);
+        const targetQ = reducedGlitch ? randomDecimalBetween(0.7, 2.6) : randomDecimalBetween(2.5, 10);
+        filter.frequency.setTargetAtTime(targetFrequency, now, 0.006);
+        filter.Q.setTargetAtTime(targetQ, now, 0.006);
 
-        const filter = glitchUiState.distortionNode;
-        if (filter) {
-            const targetFrequency = reducedGlitch
-                ? randomDecimalBetween(180, 620)
-                : randomDecimalBetween(220, 1900);
-            const targetQ = reducedGlitch
-                ? randomDecimalBetween(0.7, 2.6)
-                : randomDecimalBetween(2.5, 10);
-            filter.frequency.setTargetAtTime(targetFrequency, now, 0.006);
-            filter.Q.setTargetAtTime(targetQ, now, 0.006);
-        }
-
-        const panner = glitchUiState.stereoPannerNode;
-        if (panner?.pan) {
+        if (panner) {
             const panRange = reducedGlitch ? 0.24 : 0.88;
             panner.pan.setTargetAtTime(randomDecimalBetween(-panRange, panRange), now, 0.006);
         }
 
-        const ditherGain = glitchUiState.ditherGainNode?.gain;
-        if (ditherGain) {
-            const ditherLevel = reducedGlitch
-                ? randomDecimalBetween(0.006, 0.018)
-                : randomDecimalBetween(0.035, 0.12);
-            ditherGain.cancelScheduledValues(now);
-            ditherGain.setTargetAtTime(ditherLevel, now, reducedGlitch ? 0.08 : 0.012);
-        }
+        const ditherLevel = reducedGlitch ? randomDecimalBetween(0.006, 0.018) : randomDecimalBetween(0.035, 0.12);
+        noiseGain.gain.cancelScheduledValues(now);
+        noiseGain.gain.setTargetAtTime(ditherLevel, now, reducedGlitch ? 0.08 : 0.012);
+    } else if (musicHasVideo) {
+        // A local file can still stutter through its media volume without a Web Audio source.
+        const dropout = reducedGlitch ? randomDecimalBetween(0.42, 0.65) : randomDecimalBetween(0.02, 0.12);
+        const scale = music.volume < adoConcertBaseVolume * 0.8 ? 1 : dropout;
+        music.volume = adoConcertBaseVolume * scale;
     } else {
-        bgMusic.volume = clamp01(baseGain);
+        music.volume = computeEffectiveBackgroundVolume(music);
     }
 
     glitchUiState.warbleTimeoutId = window.setTimeout(() => {
         glitchUiState.warbleTimeoutId = null;
-        scheduleGlitchWarbleCycle(bgMusic, chain);
+        scheduleGlitchWarbleCycle(music, chain);
     }, cycleDuration);
 }
 
@@ -4511,158 +4522,109 @@ function getDigitalCorruptionCurve(reducedGlitch) {
     return glitchAudioCurveCache.get(profile);
 }
 
-function ensureGlitchAudioChain(audioElement) {
-    if (!audioElement) return null;
-
+function ensureGlitchAudioChain(music, baseGain) {
+    const existing = glitchAudioChains.get(music);
+    if (existing) return existing;
     const context = resumeAudioEngine();
-    if (!context) {
-        applyMediaGain(audioElement, { category: 'music' });
-        return null;
-    }
+    if (!context || !canUseMediaElementSource(music)) return null;
+    if (music instanceof HTMLVideoElement && context.state !== 'running') return null;
 
-    if (!canUseMediaElementSource(audioElement)) {
-        applyMediaGain(audioElement, { category: 'music' });
-        return null;
-    }
-
-    if (glitchUiState.sourceNode && glitchUiState.sourceElement !== audioElement) {
-        glitchUiState.sourceNode.disconnect();
-        glitchUiState.sourceNode = null;
-        glitchUiState.sourceElement = null;
-    }
-
-    if (!glitchUiState.sourceNode) {
-        glitchUiState.sourceNode = context.createMediaElementSource(audioElement);
-        glitchUiState.sourceElement = audioElement;
-        glitchUiState.audioPipelineMode = null;
-    }
-
-    if (!glitchUiState.waveShaper) {
-        glitchUiState.waveShaper = context.createWaveShaper();
-        glitchUiState.waveShaper.curve = getDigitalCorruptionCurve(false);
-        glitchUiState.waveShaper.oversample = 'none';
-    }
-
-    if (!glitchUiState.distortionNode) {
-        glitchUiState.distortionNode = context.createBiquadFilter();
-        glitchUiState.distortionNode.type = 'highpass';
-        glitchUiState.distortionNode.frequency.value = 240;
-    }
-
-    if (!glitchUiState.stereoPannerNode && typeof context.createStereoPanner === 'function') {
-        glitchUiState.stereoPannerNode = context.createStereoPanner();
-        glitchUiState.stereoPannerNode.pan.value = 0;
-    }
-
-    const desiredPipeline = shouldUseGlitchBaseEffect() ? 'glitch' : 'clean';
-
-    if (desiredPipeline === 'glitch' && (!glitchUiState.ditherSourceNode || !glitchUiState.ditherGainNode)) {
-        const ditherBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.75), context.sampleRate);
-        const ditherSamples = ditherBuffer.getChannelData(0);
-        for (let i = 0; i < ditherSamples.length; i += 1) {
-            ditherSamples[i] = Math.random() * 2 - 1;
-        }
-
-        glitchUiState.ditherSourceNode = context.createBufferSource();
-        glitchUiState.ditherSourceNode.buffer = ditherBuffer;
-        glitchUiState.ditherSourceNode.loop = true;
-        glitchUiState.ditherGainNode = context.createGain();
-        glitchUiState.ditherGainNode.gain.value = 0;
-        glitchUiState.ditherSourceNode.connect(glitchUiState.ditherGainNode);
-        glitchUiState.ditherSourceNode.start();
-    }
-
-    if (!glitchUiState.gainNode) {
-        glitchUiState.gainNode = context.createGain();
-        glitchUiState.gainNode.gain.value = computeEffectiveBackgroundVolume(audioElement);
-    }
-
-    if (glitchUiState.audioPipelineMode !== desiredPipeline) {
-        if (glitchUiState.sourceNode) {
-            try { glitchUiState.sourceNode.disconnect(); } catch (error) {}
-        }
-        if (glitchUiState.waveShaper) {
-            try { glitchUiState.waveShaper.disconnect(); } catch (error) {}
-        }
-        if (glitchUiState.distortionNode) {
-            try { glitchUiState.distortionNode.disconnect(); } catch (error) {}
-        }
-        if (glitchUiState.stereoPannerNode) {
-            try { glitchUiState.stereoPannerNode.disconnect(); } catch (error) {}
-        }
-        if (glitchUiState.ditherGainNode) {
-            try { glitchUiState.ditherGainNode.disconnect(); } catch (error) {}
-        }
-        if (glitchUiState.gainNode) {
-            try { glitchUiState.gainNode.disconnect(); } catch (error) {}
-        }
-
-        if (desiredPipeline === 'glitch') {
-            glitchUiState.sourceNode
-                .connect(glitchUiState.waveShaper)
-                .connect(glitchUiState.distortionNode);
-            glitchUiState.ditherGainNode.connect(glitchUiState.distortionNode);
-            if (glitchUiState.stereoPannerNode) {
-                glitchUiState.distortionNode
-                    .connect(glitchUiState.stereoPannerNode)
-                    .connect(glitchUiState.gainNode);
-            } else {
-                glitchUiState.distortionNode.connect(glitchUiState.gainNode);
-            }
-            glitchUiState.gainNode.connect(context.destination);
-        } else {
-            glitchUiState.sourceNode
-                .connect(glitchUiState.gainNode)
-                .connect(context.destination);
-        }
-
-        glitchUiState.audioPipelineMode = desiredPipeline;
-    }
-
-    return {
-        context,
-        baseGain: glitchUiState.gainNode.gain.value,
-        gainNode: glitchUiState.gainNode
-    };
+    const sourceNode = context.createMediaElementSource(music);
+    const gainNode = context.createGain();
+    gainNode.gain.value = baseGain;
+    sourceNode.connect(gainNode).connect(context.destination);
+    const chain = { context, sourceNode, gainNode, baseGain, effect: null, distorted: false };
+    glitchAudioChains.set(music, chain);
+    return chain;
 }
 
-function updateGlitchAudioControls(enabled) {
-    const bgMusic = document.getElementById('ambientMusic');
-    if (!bgMusic) return;
+function createGlitchAudioEffect(context) {
+    const waveShaper = context.createWaveShaper();
+    const filter = context.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = 240;
+    waveShaper.connect(filter);
 
-    const { baseVolume, chain } = synchronizeBackgroundRouting(bgMusic);
+    const panner = context.createStereoPanner?.();
+    if (panner) filter.connect(panner);
+    const noiseBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.75), context.sampleRate);
+    const noiseSamples = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < noiseSamples.length; i += 1) {
+        noiseSamples[i] = Math.random() * 2 - 1;
+    }
 
+    const noise = context.createBufferSource();
+    noise.buffer = noiseBuffer;
+    noise.loop = true;
+    const noiseGain = context.createGain();
+    noiseGain.gain.value = 0;
+    noise.connect(noiseGain).connect(filter);
+    noise.start();
+
+    return { waveShaper, filter, panner, noiseGain, output: panner || filter };
+}
+
+function setGlitchMusicGain(chain, volume) {
+    chain.baseGain = volume;
+    const gain = chain.gainNode.gain;
+    const now = chain.context.currentTime;
+    gain.cancelScheduledValues(now);
+    if (volume === 0) gain.setValueAtTime(0, now);
+    else gain.setTargetAtTime(volume, now, 0.01);
+}
+
+function setGlitchAudioDistortion(chain, enabled) {
+    if (!chain || chain.distorted === enabled) return;
+    const { context, sourceNode, gainNode } = chain;
+    sourceNode.disconnect();
     if (enabled) {
-        const reducedGlitch = Boolean(appState.qualityPreferences?.reduceGlitchEffects);
-        const profile = reducedGlitch ? 'reduced' : 'full';
-        if (glitchUiState.waveShaper && glitchUiState.audioCorruptionProfile !== profile) {
-            glitchUiState.waveShaper.curve = getDigitalCorruptionCurve(reducedGlitch);
-            glitchUiState.audioCorruptionProfile = profile;
-        }
-        scheduleGlitchWarbleCycle(bgMusic, chain);
+        chain.effect ??= createGlitchAudioEffect(context);
+        chain.effect.waveShaper.curve = getDigitalCorruptionCurve(Boolean(appState.qualityPreferences?.reduceGlitchEffects));
+        sourceNode.connect(chain.effect.waveShaper);
+        chain.effect.output.connect(gainNode);
     } else {
-        resetGlitchWarbleTimer();
-        glitchUiState.audioCorruptionProfile = null;
-        restoreGlitchMediaPlayback(bgMusic, chain ? 1 : baseVolume);
-        if (chain?.gainNode) {
-            const now = chain.context.currentTime;
-            if (typeof chain.gainNode.gain.cancelScheduledValues === 'function') {
-                chain.gainNode.gain.cancelScheduledValues(now);
-            }
-            if (typeof chain.gainNode.gain.setTargetAtTime === 'function') {
-                chain.gainNode.gain.setTargetAtTime(baseVolume, now, 0.025);
-            } else {
-                chain.gainNode.gain.value = baseVolume;
-            }
-        }
-        if (glitchUiState.stereoPannerNode?.pan && chain?.context) {
-            glitchUiState.stereoPannerNode.pan.setValueAtTime(0, chain.context.currentTime);
-        }
-        if (glitchUiState.ditherGainNode?.gain && chain?.context) {
-            const now = chain.context.currentTime;
-            glitchUiState.ditherGainNode.gain.cancelScheduledValues(now);
-            glitchUiState.ditherGainNode.gain.setValueAtTime(0, now);
-        }
+        const { output, noiseGain, panner } = chain.effect;
+        output.disconnect();
+        sourceNode.connect(gainNode);
+        const now = context.currentTime;
+        noiseGain.gain.cancelScheduledValues(now);
+        noiseGain.gain.setValueAtTime(0, now);
+        panner?.pan.setValueAtTime(0, now);
+        setGlitchMusicGain(chain, chain.baseGain);
+    }
+    chain.distorted = enabled;
+}
+
+function updateGlitchAudioControls() {
+    const adoEnabled = enabledEvents.has('ado26');
+    const music = document.getElementById(adoEnabled ? 'ado-concert-player' : 'ambientMusic');
+    const volume = adoEnabled ? adoConcertBaseVolume : music?.volume;
+    const canDistort = shouldUseGlitchBaseEffect() && experienceStarted && isSoundChannelActive('music')
+        && music && !music.paused && !music.ended && !music.seeking && !music.muted && volume > 0
+        && music.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+    const target = canDistort ? music : null;
+    const previous = glitchUiState.audioTarget;
+    if (previous === target) return;
+
+    const previousChain = glitchAudioChains.get(previous);
+    setGlitchAudioDistortion(previousChain, false);
+    resetGlitchWarbleTimer();
+    restoreGlitchMediaPlayback();
+    glitchUiState.audioTarget = null;
+    if (previous instanceof HTMLVideoElement && !previousChain) previous.volume = adoConcertBaseVolume;
+    if (!target) return;
+
+    const chain = adoEnabled ? ensureGlitchAudioChain(target, volume) : synchronizeBackgroundRouting(target);
+    if (chain) target.volume = 1;
+    setGlitchAudioDistortion(chain, true);
+    glitchUiState.audioTarget = target;
+    scheduleGlitchWarbleCycle(target, chain);
+}
+
+for (const id of ['ambientMusic', 'ado-concert-player']) {
+    const music = document.getElementById(id);
+    for (const event of ['playing', 'pause', 'waiting', 'seeking', 'seeked', 'emptied', 'ended', 'error', 'volumechange']) {
+        music?.addEventListener(event, updateGlitchAudioControls);
     }
 }
 
@@ -4877,7 +4839,7 @@ function triggerGlitchBurst() {
     emitGlitchConsoleErrors();
     body.classList.add('is-glitching');
     glitchUiState.isUiGlitching = true;
-    updateGlitchAudioControls(true);
+    updateGlitchAudioControls();
 }
 
 function completeGlitchBurst() {
@@ -4886,7 +4848,7 @@ function completeGlitchBurst() {
 
     body.classList.remove('is-glitching');
     glitchUiState.isUiGlitching = false;
-    updateGlitchAudioControls(false);
+    updateGlitchAudioControls();
 }
 
 function queueGlitchBurstCycle(delay) {
@@ -4946,8 +4908,6 @@ function stopGlitchLoop(options = {}) {
         window.clearTimeout(glitchUiState.burstTimeoutId);
         glitchUiState.burstTimeoutId = null;
     }
-    resetGlitchWarbleTimer();
-    glitchUiState.isUiGlitching = false;
     if (!body || !root) return;
 
     const clearClasses = () => {
@@ -4957,13 +4917,11 @@ function stopGlitchLoop(options = {}) {
 
     if (options.forceClear) {
         clearClasses();
-        updateGlitchAudioControls(false);
         return;
     }
 
     window.setTimeout(() => {
-        clearClasses();
-        updateGlitchAudioControls(false);
+        if (!glitchPresentationEnabled) clearClasses();
     }, 150);
 }
 
@@ -4999,7 +4957,7 @@ function applyGlitchVisuals(enabled, options = {}) {
         } else if (!isGlitchLoopScheduled()) {
             startGlitchLoop();
         }
-        updateGlitchAudioControls(shouldUseGlitchBaseEffect());
+        updateGlitchAudioControls();
     } else {
         concealGlitchEntryErrors();
         if (glitchPresentationEnabled) {
@@ -5014,7 +4972,7 @@ function applyGlitchVisuals(enabled, options = {}) {
             root.classList.remove('biome--glitch');
         }
         glitchUiState.isUiGlitching = false;
-        updateGlitchAudioControls(false);
+        updateGlitchAudioControls();
     }
 }
 
@@ -5070,6 +5028,15 @@ function applyBiomeBackdrop(image) {
 
 function applyBiomeTheme(biome, selectionState = null) {
     const selection = selectionState || collectBiomeSelectionState();
+    if (enabledEvents.has('ado26')) {
+        ++biomeBackgroundRequestId;
+        applyBiomeBackdrop('files/images/events/ado/takeover-key-art.png');
+        stopSingularitySummonSequence();
+        document.getElementById('ambientMusic')?.pause();
+        syncAdoConcertMusic();
+        return;
+    }
+    syncAdoConcertMusic();
     const assetKey = resolveBiomeAssetKey(biome, selection);
     const assets = biomeAssets[assetKey] || biomeAssets.normal;
     const night = selection.timeBiome === 'night' || selection.activeBiomes?.includes('night') || assetKey === 'night';
@@ -5112,7 +5079,7 @@ function applyBiomeTheme(biome, selectionState = null) {
         if (appState.audio.roll && experienceStarted) {
             primeBackgroundMusic(bgMusic);
             if (glitchPresentationEnabled) {
-                updateGlitchAudioControls(shouldUseGlitchBaseEffect());
+                updateGlitchAudioControls();
             }
         }
 
@@ -7026,6 +6993,7 @@ function playAuraVideo(videoId, options = {}) {
         applyMediaGain(video, { category: 'cutscene' });
 
         appState.videoPlaying = true;
+        syncAdoConcertMusic();
         const bgMusic = manageAmbient ? document.getElementById('ambientMusic') : null;
         const wasPlaying = !!(bgMusic && !bgMusic.paused);
         if (bgMusic && wasPlaying) {
@@ -7149,6 +7117,7 @@ function playAuraVideo(videoId, options = {}) {
             }
             removePlaybackListeners();
             appState.videoPlaying = false;
+            syncAdoConcertMusic();
             safelyResetVideo();
             video.style.display = 'none';
             overlay.setAttribute('aria-hidden', 'true');
@@ -9150,6 +9119,7 @@ const EASTER_EVENT_IDS = Object.freeze(EVENT_LIST.filter(event => event.theme ==
 const HALLOWEEN_EVENT_IDS = Object.freeze(EVENT_LIST.filter(event => event.theme === 'halloween').map(event => event.id));
 const SUMMER_EVENT_IDS = Object.freeze(EVENT_LIST.filter(event => event.theme === 'summer').map(event => event.id));
 const WINTER_EVENT_IDS = Object.freeze(EVENT_LIST.filter(event => event.theme === 'winter').map(event => event.id));
+const ADO_EVENT_IDS = Object.freeze(EVENT_LIST.filter(event => event.theme === 'ado').map(event => event.id));
 
 const APRIL_FOOLS_COPY_TARGETS = Object.freeze([
     {
@@ -9249,7 +9219,7 @@ const EVENT_BIOME_CONDITION_MESSAGES = Object.freeze({
     fullMoon: 'Requires Developer Biomes to be enabled under run parameters.',
 });
 
-const enabledEvents = new Set(EVENT_LIST.filter(event => event.status !== 'upcoming' && event.defaultEnabled).map(event => event.id));
+const enabledEvents = new Set(EVENT_LIST.filter(event => EventControls.defaultEnabled(event)).map(event => event.id));
 const auraEventIndex = new Map();
 
 function hasAnyEnabledEvent(eventIds) {
@@ -9295,6 +9265,7 @@ function syncAprilFoolsCopy(active) {
 }
 
 function resolveEventThemeVariant() {
+    if (hasAnyEnabledEvent(ADO_EVENT_IDS)) return 'ado';
     if (hasCombinedEventsEnabled()) return 'default';
     if (hasAnyEnabledEvent(VALENTINE_EVENT_IDS)) return 'valentine';
     if (hasAnyEnabledEvent(APRIL_FOOLS_EVENT_IDS)) return 'april-fools';
@@ -9306,6 +9277,7 @@ function resolveEventThemeVariant() {
 }
 
 function resolveParticleMode() {
+    if (hasAnyEnabledEvent(ADO_EVENT_IDS)) return 'none';
     if (hasCombinedEventsEnabled()) return 'none';
     if (hasAnyEnabledEvent(VALENTINE_EVENT_IDS)) return 'hearts';
     if (hasAnyEnabledEvent(WINTER_EVENT_IDS)) return 'snow';
@@ -9325,11 +9297,13 @@ function syncEventVisualPresentation() {
     pageBody.classList.toggle('theme-event-summer', variant === 'summer');
     pageBody.classList.toggle('theme-event-easter', variant === 'easter');
     pageBody.classList.toggle('theme-event-april-fools', variant === 'april-fools');
+    pageBody.classList.toggle('theme-event-ado', variant === 'ado');
 
     snowEffectState.mode = resolveParticleMode();
     syncSnowEffect();
     syncAprilFoolsCopy(variant === 'april-fools');
-    globalThis.PumpkinCarver?.setActive(variant === 'halloween');
+    const selection = collectBiomeSelectionState();
+    applyBiomeTheme(selection.canonicalBiome, selection);
 }
 
 function biomeEventRequirementsMet(biomeId) {
@@ -9512,23 +9486,6 @@ const ROE_BREAKTHROUGH_BLOCKLIST = new Set([
 ]);
 
 const EVENT_SUMMARY_EMPTY_LABEL = "No events enabled";
-
-function syncEventOptionVisualState(eventId, enabled) {
-    const eventMenu = document.getElementById('event-option-list');
-    if (!eventMenu) return;
-
-    const checkbox = eventMenu.querySelector(`input[type="checkbox"][data-event-id="${eventId}"]`);
-    if (!checkbox) return;
-
-    if (checkbox.checked !== enabled) {
-        checkbox.checked = enabled;
-    }
-
-    const option = checkbox.closest('.interface-select__option--checkbox');
-    if (option) {
-        option.classList.toggle('interface-select__option--active', !!enabled);
-    }
-}
 
 function gatherActiveEventLabels() {
     return EVENT_LIST
@@ -9776,22 +9733,13 @@ function showAstraldBlessingOverlay() {
 function setEventToggleState(eventId, enabled) {
     const event = EventData[eventId];
     if (!event) return;
-    if ((!enabled && EventControls.locked(event)) || (enabled && event.status === 'upcoming')) {
-        syncEventOptionVisualState(eventId, enabledEvents.has(eventId));
+    const unavailable = enabled ? event.status === 'upcoming' : EventControls.locked(event);
+    if (unavailable || enabledEvents.has(eventId) === enabled) {
         updateEventSummary();
         return;
     }
-    const hasEvent = enabledEvents.has(eventId);
-    if (enabled && !hasEvent) {
-        enabledEvents.add(eventId);
-    } else if (!enabled && hasEvent) {
-        enabledEvents.delete(eventId);
-    } else {
-        syncEventOptionVisualState(eventId, enabled);
-        return;
-    }
-
-    syncEventOptionVisualState(eventId, enabled);
+    if (enabled) enabledEvents.add(eventId);
+    else enabledEvents.delete(eventId);
 
     updateEventSummary();
     enforceBiomeEventRestrictions();
@@ -11127,7 +11075,6 @@ document.addEventListener('DOMContentLoaded', setupPresetConsoleTabs);
 document.addEventListener('DOMContentLoaded', initializeEquipmentControls);
 document.addEventListener('DOMContentLoaded', setupLuckPresetAnimations);
 document.addEventListener('DOMContentLoaded', setupVersionChangelogOverlay);
-document.addEventListener('DOMContentLoaded', maybeShowChangelogOnFirstVisit);
 document.addEventListener('DOMContentLoaded', initializeIntroOverlay);
 document.addEventListener('DOMContentLoaded', initializeRollTriggerFloating);
 document.addEventListener('DOMContentLoaded', setupRollCancellationControl);
@@ -12702,6 +12649,10 @@ function isAstraldBlessingEnabled() {
     return Boolean(toggle && toggle.checked);
 }
 
+function isAdoBlessingEnabled() {
+    return Boolean(document.getElementById('ado-blessing-toggle')?.checked);
+}
+
 function createAuraEvaluationContext(selection, { eventChecker, luckValue, enabledEventsSet, ignoreRune = false } = {}) {
     const selectionState = selection || collectBiomeSelectionState();
     const biome = selectionState?.canonicalBiome || 'normal';
@@ -12783,6 +12734,7 @@ function createAuraEvaluationContext(selection, { eventChecker, luckValue, enabl
         baseBreakthroughBiomes,
         ygBlessingActive: isYgBlessingEnabled(),
         astraldBlessingActive: isAstraldBlessingEnabled(),
+        adoBlessingActive: isAdoBlessingEnabled(),
         luckSource: getLuckSelectionSource(),
         luckValue: Number.isFinite(luckValue) ? luckValue : currentLuck,
         enabledEventsSet: enabledEventsSet instanceof Set ? enabledEventsSet : enabledEvents
@@ -12942,6 +12894,8 @@ function isVampireHunterAura(aura, context) {
 }
 
 function determineAuraEffectiveChance(aura, context) {
+    // Ado's Blessing only grants aura access for now, changing this whenever it's confirmed tomorruh 🥹✌️
+    if (aura?.requiresAdoBlessing && context?.adoBlessingActive !== true) return Infinity;
     if (aura.requiresRadiantMoons) return Infinity;
     if (aura.radiantUnlockMask && (context.biome !== 'radiantForest'
         || !((context.radiantUnlockMask || 0) & aura.radiantUnlockMask))) return Infinity;
@@ -15929,4 +15883,4 @@ function createPlainShareText(summary) {
     return ['Sols Roll Result', '', 'Auras Rolled', ...auras, '', ResultSummary.text(summary)].join('\n');
 }
 
-document.addEventListener('DOMContentLoaded', () => queueMicrotask(() => cutsceneWarningManager.initialize()));
+document.addEventListener('DOMContentLoaded', showStartupNotices);

@@ -1,0 +1,22 @@
+{
+  "retrievedOn": "2026-11-27",
+  "assets": {
+    "ado-portrait.jpg": {
+      "description": "Official illustrated artist portrait from Ado's Universal Music Japan biography; original file retained.",
+      "sourcePage": "https://www.universal-music.co.jp/ado/biography/"
+    },
+    "hibana-artwork.webp": {
+      "description": "Official Ado WORLD TOUR 2025 ‘Hibana’ artwork used as the full TAKEOVER card backdrop.",
+      "illustrator": "ORIHARA",
+      "creditSource": "https://cloud9pro.co.jp/news/p/8856/",
+      "sourcePage": "https://sp.universal-music.co.jp/ado/hibana/",
+      "sourceImage": "https://sp.universal-music.co.jp/ado/hibana/assets/images/main.webp"
+    },
+    "takeover-key-art.png": {
+      "description": "Official Sol's RNG x Ado collaboration key art; original file retained.",
+      "sourcePage": "https://www.universal-music.co.jp/ado/sols-rng/#sols-rng-eng",
+      "sourceImage": "https://www.universal-music.co.jp/ado/wp-content/uploads/sites/3692/2026/11/AdoKeyArt_Horizontal_20001125.png"
+    }
+  },
+  "rights": "Artwork belongs to its respective rights holders. No open license is claimed."
+}

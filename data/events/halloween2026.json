@@ -4,8 +4,9 @@
   "order": 14,
   "theme": "halloween",
   "sigilClass": "sigil-outline-blood",
-  "status": "active",
-  "defaultEnabled": true,
+  "status": "ended",
+  "defaultEnabled": false,
+  "preserveRollDetails": true,
   "auraDiscoveryTerms": [
     "Hallow Point"
   ],

@@ -1941,6 +1941,7 @@ body.biome--glitch:not(.glitch-effects-enabled) .interface-backdrop {
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,

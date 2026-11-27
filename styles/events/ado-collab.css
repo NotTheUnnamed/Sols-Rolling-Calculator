@@ -1,0 +1,42 @@
+.sigil-outline-ado { color: #a2ccff; text-shadow: 0 0 14px #457cff66; }
+.ado-decoration { position: fixed; right: 22px; bottom: 100px; z-index: 25; width: 100px; }
+body:has(#event-selector[open]) .ado-decoration { visibility: hidden; }
+.ado-decoration__link { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #c6dfff; text-decoration: none; isolation: isolate; }
+.ado-decoration__portrait { position: relative; display: block; width: 88px; height: 108px; border: 1px solid #79aaff99; border-radius: 44px 44px 16px 16px; box-shadow: 0 8px 20px #0008, 0 0 20px #285ccc33; transition: transform .25s ease, box-shadow .25s ease; }
+.ado-decoration__portrait img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.ado-decoration__portrait::after { content: ''; position: absolute; inset: -5px; border: 1px solid #8dbbff; border-radius: inherit; opacity: 0; pointer-events: none; }
+.ado-decoration__caption { display: grid; gap: 3px; width: 100%; padding: 7px 5px; border: 1px solid #6b98df55; background: rgb(11 20 38 / calc(.949 * var(--card-fill-opacity, 1))); text-align: center; box-sizing: border-box; }
+.ado-decoration__caption strong { font-size: .63rem; letter-spacing: .06em; }
+.ado-decoration__caption small { font-size: .53rem; color: #9eb7d7; }
+.ado-decoration__link:hover .ado-decoration__portrait { transform: translateY(-4px) rotate(-3deg); box-shadow: 0 10px 24px #0009, 0 0 25px #4a7fff66; }
+.ado-decoration__link:focus-visible { outline: 2px solid #a2ccff; outline-offset: 8px; border-radius: 8px; }
+.ado-decoration--opening .ado-decoration__portrait { animation: ado-encore .95s cubic-bezier(.2,.8,.2,1) both; }
+.ado-decoration--opening .ado-decoration__portrait::after { animation: ado-ripple .9s ease-out both; }
+.ado-decoration--opening .ado-decoration__caption { border-color: #a5caff; background: rgb(24 43 77 / var(--card-fill-opacity, 1)); }
+@keyframes ado-encore { 0% { transform: scale(1); } 18% { transform: scale(.89) rotate(-5deg); } 48% { transform: translateY(-15px) scale(1.12) rotate(4deg); box-shadow: 0 0 40px #6899ff99; } 75% { transform: translateY(-4px) scale(.98) rotate(-2deg); } 100% { transform: scale(1); } }
+@keyframes ado-ripple { 0%, 12% { transform: scale(.95); opacity: 0; } 30% { opacity: .8; } 100% { transform: scale(1.8); opacity: 0; } }
+.form-field--ado .ado-blessing-note { grid-column: 1 / -1; margin-top: 5px; color: #94abc7; font-size: .6rem; line-height: 1.6; }
+.changelog-ado .changelog-modal__title { color: #c3dbff; }
+.changelog-ado__hero { margin: 16px 0 20px; }
+.changelog-ado__hero img { display: block; width: 100%; height: auto; border: 1px solid #6c96ed55; border-radius: 8px; }
+.changelog-ado__hero figcaption { margin-top: 7px; color: #8fa7c8; font-size: .62rem; }
+.changelog-ado__schedule { width: 100%; margin: 12px 0; border-collapse: collapse; color: #c4d6ed; font-size: .75rem; }
+.changelog-ado__schedule caption { text-align: left; padding-bottom: 10px; color: #a2ccff; font-weight: 600; }
+.changelog-ado__schedule th, .changelog-ado__schedule td { padding: 10px 8px; border-bottom: 1px solid #6a8ec433; text-align: left; }
+.changelog-ado__schedule th { color: #91afd8; font-size: .65rem; font-weight: 500; }
+.changelog-ado__pending { padding: 12px 14px; border-left: 2px solid #7aa5ff; background: #335da814; line-height: 1.7; }
+@media (max-width: 680px) {
+    .ado-decoration { right: 10px; bottom: 100px; width: 76px; }
+    .ado-decoration__portrait { width: 64px; height: 78px; }
+    .ado-decoration__caption strong { font-size: .55rem; }
+    .ado-decoration__caption small { font-size: .48rem; }
+    .changelog-ado__schedule { font-size: .65rem; }
+    .changelog-ado__schedule th, .changelog-ado__schedule td { padding: 9px 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ado-decoration__portrait { transition: none; }
+    .ado-decoration--opening .ado-decoration__portrait, .ado-decoration--opening .ado-decoration__portrait::after { animation: none; }
+}
+.reduce-motion .ado-decoration__portrait, .quality-no-ui-animations .ado-decoration__portrait { transition: none; }
+.reduce-motion .ado-decoration--opening .ado-decoration__portrait, .reduce-motion .ado-decoration--opening .ado-decoration__portrait::after,
+.quality-no-ui-animations .ado-decoration--opening .ado-decoration__portrait, .quality-no-ui-animations .ado-decoration--opening .ado-decoration__portrait::after { animation: none; }

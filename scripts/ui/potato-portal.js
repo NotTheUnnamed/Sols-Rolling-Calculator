@@ -9,7 +9,11 @@
     document.addEventListener('change', event => {
         const control = event.target.closest('[data-potato-switch]');
         if (!control || control.checked === minimalMode) return;
-        window.location.assign(new URL(control.dataset.potatoTarget, document.baseURI).href);
+        const destination = new URL(control.dataset.potatoTarget, document.baseURI);
+        if (destination.protocol === 'file:' && destination.pathname.endsWith('/')) {
+            destination.pathname += 'index.html';
+        }
+        window.location.assign(destination.href);
     });
     if (minimalMode) return;
     const root = new URL('../../', document.currentScript.src);
@@ -59,11 +63,12 @@
         });
         const minimal = target.createElement('link');
         minimal.rel = 'stylesheet';
-        minimal.href = new URL('styles/core/minimal.css?v=2.222.layout2', root).href;
+        minimal.href = new URL('styles/core/minimal.css?v=2.23.layout2', root).href;
         loads.push(new Promise(resolve => { minimal.onload = minimal.onerror = resolve; }));
         target.head.append(minimal);
         const body = document.body.cloneNode(true);
-        body.querySelectorAll('script,audio,video,iframe,.potato-preview,.glitch-signal,.glitch-entry-errors,.event-atmosphere,.snow-field,.pumpkin-decoration,#pumpkin-carver').forEach(element => element.remove());
+        body.querySelectorAll('script,audio,video,iframe,.potato-preview,.glitch-signal,.glitch-entry-errors,.event-atmosphere,.snow-field,.ado-decoration').forEach(element => element.remove());
+        body.querySelectorAll('[autofocus]').forEach(element => element.removeAttribute('autofocus'));
         body.querySelectorAll('[data-quality-option]:not([data-quality-option="disableWikiAuraStyles"])').forEach(element => element.remove());
         body.querySelectorAll('*').forEach(element => {
             for (const attribute of [...element.attributes]) if (attribute.name.startsWith('on')) element.removeAttribute(attribute.name);

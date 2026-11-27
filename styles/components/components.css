@@ -1140,7 +1140,7 @@ select.form-field__input option {
         linear-gradient(var(--accent), var(--accent)) bottom right / var(--roll-console-corner-thickness) var(--roll-console-corner-size) no-repeat,
         linear-gradient(90deg, rgb(var(--accent-rgb) / 0.035) 1px, transparent 1px) 0 0 / 18px 18px,
         linear-gradient(0deg, rgb(var(--accent-rgb) / 0.025) 1px, transparent 1px) 0 0 / 18px 18px,
-        linear-gradient(155deg, rgba(11, 23, 43, 0.92), rgba(4, 10, 22, 0.96));
+        linear-gradient(155deg, rgb(11 23 43 / calc(0.92 * var(--card-fill-opacity, 1))), rgb(4 10 22 / calc(0.96 * var(--card-fill-opacity, 1))));
     border: 1px solid rgb(var(--accent-rgb) / 0.23);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.035),
@@ -1926,7 +1926,7 @@ body.potion-mode--multiple #device-buff-preset-panel .preset-button__actions {
     background:
         linear-gradient(90deg, rgb(var(--accent-rgb) / 0.027) 1px, transparent 1px) 0 0 / 20px 20px,
         linear-gradient(0deg, rgb(var(--accent-rgb) / 0.023) 1px, transparent 1px) 0 0 / 20px 20px,
-        linear-gradient(160deg, rgba(9, 19, 37, 0.88), rgba(3, 9, 20, 0.94));
+        linear-gradient(160deg, rgb(9 19 37 / calc(0.88 * var(--card-fill-opacity, 1))), rgb(3 9 20 / calc(0.94 * var(--card-fill-opacity, 1))));
 }
 
 .parameter-console__module {
@@ -1944,7 +1944,7 @@ body.potion-mode--multiple #device-buff-preset-panel .preset-button__actions {
         linear-gradient(var(--accent), var(--accent)) bottom left / var(--parameter-corner-thickness) var(--parameter-corner-size) no-repeat,
         linear-gradient(var(--accent), var(--accent)) bottom right / var(--parameter-corner-size) var(--parameter-corner-thickness) no-repeat,
         linear-gradient(var(--accent), var(--accent)) bottom right / var(--parameter-corner-thickness) var(--parameter-corner-size) no-repeat,
-        linear-gradient(155deg, rgba(10, 22, 41, 0.95), rgba(4, 10, 21, 0.98));
+        linear-gradient(155deg, rgb(10 22 41 / calc(0.95 * var(--card-fill-opacity, 1))), rgb(4 10 21 / calc(0.98 * var(--card-fill-opacity, 1))));
     border: 1px solid rgb(var(--accent-rgb) / 0.24);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.035),
@@ -2179,7 +2179,7 @@ body.potion-mode--multiple #device-buff-preset-panel .preset-button__actions {
 .parameter-console .multi-potion-panel {
     background:
         linear-gradient(145deg, rgb(var(--accent-rgb) / 0.08), transparent 46%),
-        rgba(3, 9, 20, 0.78);
+        rgb(3 9 20 / calc(0.78 * var(--card-fill-opacity, 1)));
     border-color: rgb(var(--accent-rgb) / 0.22);
     box-shadow: inset 0 0 18px rgb(var(--accent-rgb) / 0.055);
 }
@@ -3179,7 +3179,7 @@ body.quality-no-ui-animations .bloodIIClass {
         linear-gradient(var(--accent), var(--accent)) bottom right / var(--preset-bank-corner-thickness) var(--preset-bank-corner-size) no-repeat,
         linear-gradient(90deg, rgb(var(--accent-rgb) / 0.03) 1px, transparent 1px) 0 0 / 18px 18px,
         linear-gradient(0deg, rgb(var(--accent-rgb) / 0.026) 1px, transparent 1px) 0 0 / 18px 18px,
-        linear-gradient(155deg, rgba(9, 19, 37, 0.96), rgba(3, 9, 20, 0.98));
+        linear-gradient(155deg, rgb(9 19 37 / calc(0.96 * var(--card-fill-opacity, 1))), rgb(3 9 20 / calc(0.98 * var(--card-fill-opacity, 1))));
     border: 1px solid rgb(var(--accent-rgb) / 0.24);
     box-shadow: inset 0 0 26px rgb(var(--accent-rgb) / 0.055);
     animation: preset-console-bank-enter 0.28s cubic-bezier(0.2, 0.76, 0.28, 1) both;
@@ -3340,7 +3340,7 @@ body.quality-no-ui-animations .bloodIIClass {
     padding: 10px 12px;
     --button-background:
         linear-gradient(155deg, rgb(var(--accent-rgb) / 0.055), transparent 52%),
-        rgba(5, 12, 24, 0.9);
+        rgb(5 12 24 / calc(0.9 * var(--card-fill-opacity, 1)));
     --button-border-color: rgba(95, 160, 230, 0.35);
     color: var(--text-primary);
     cursor: pointer;
@@ -3353,29 +3353,29 @@ body.quality-no-ui-animations .bloodIIClass {
 .preset-matrix button.luck-preset-button--active {
     border-color: rgba(255, 226, 141, 0.85);
     box-shadow: inset 0 0 20px rgba(255, 214, 116, 0.35), 0 0 12px rgba(255, 220, 120, 0.4);
-    --button-background: rgba(34, 28, 14, 0.9);
+    --button-background: rgb(34 28 14 / calc(0.9 * var(--card-fill-opacity, 1)));
 }
 
 .preset-matrix #luck-preset-pump-kings-blood.luck-preset-button--active {
-    --button-background: linear-gradient(110deg, rgba(86, 34, 0, 0.95), rgba(28, 12, 2, 0.95), rgba(112, 42, 0, 0.92));
+    --button-background: linear-gradient(110deg, rgb(86 34 0 / calc(0.95 * var(--card-fill-opacity, 1))), rgb(28 12 2 / calc(0.95 * var(--card-fill-opacity, 1))), rgb(112 42 0 / calc(0.92 * var(--card-fill-opacity, 1))));
     border-color: rgba(255, 137, 32, 0.95);
     box-shadow: inset 0 0 24px rgba(255, 125, 13, 0.46), 0 0 14px rgba(255, 118, 13, 0.68), 0 0 28px rgba(145, 64, 0, 0.58);
 }
 
 .preset-matrix #luck-preset-tutorial-potion.luck-preset-button--active {
-    --button-background: linear-gradient(110deg, rgba(90, 78, 0, 0.94), rgba(28, 27, 4, 0.95), rgba(116, 104, 0, 0.92));
+    --button-background: linear-gradient(110deg, rgb(90 78 0 / calc(0.94 * var(--card-fill-opacity, 1))), rgb(28 27 4 / calc(0.95 * var(--card-fill-opacity, 1))), rgb(116 104 0 / calc(0.92 * var(--card-fill-opacity, 1))));
     border-color: rgba(255, 247, 64, 0.95);
     box-shadow: inset 0 0 24px rgba(255, 247, 0, 0.42), 0 0 14px rgba(255, 247, 64, 0.62), 0 0 28px rgba(180, 144, 0, 0.52);
 }
 
 .preset-matrix #luck-preset-oblivion {
-    --button-background: linear-gradient(110deg, rgba(28, 0, 52, 0.94), rgba(8, 0, 18, 0.94), rgba(50, 0, 84, 0.92));
+    --button-background: linear-gradient(110deg, rgb(28 0 52 / calc(0.94 * var(--card-fill-opacity, 1))), rgb(8 0 18 / calc(0.94 * var(--card-fill-opacity, 1))), rgb(50 0 84 / calc(0.92 * var(--card-fill-opacity, 1))));
     --button-border-color: rgba(159, 64, 255, 0.72);
     box-shadow: inset 0 0 14px rgba(114, 0, 255, 0.24), 0 0 8px rgba(82, 0, 145, 0.42);
 }
 
 .preset-matrix #luck-preset-oblivion.luck-preset-button--active {
-    --button-background: linear-gradient(110deg, rgba(76, 0, 138, 0.98), rgba(20, 0, 42, 0.98), rgba(111, 18, 166, 0.96));
+    --button-background: linear-gradient(110deg, rgb(76 0 138 / calc(0.98 * var(--card-fill-opacity, 1))), rgb(20 0 42 / calc(0.98 * var(--card-fill-opacity, 1))), rgb(111 18 166 / calc(0.96 * var(--card-fill-opacity, 1))));
     border-color: rgba(218, 145, 255, 1);
     box-shadow: inset 0 0 28px rgba(132, 26, 255, 0.66), 0 0 16px rgba(119, 0, 255, 0.92), 0 0 34px rgba(71, 0, 135, 0.82);
 }
@@ -3400,13 +3400,13 @@ body:not(.reduce-motion):not(.quality-no-ui-animations) .preset-matrix #luck-pre
 }
 
 .preset-matrix #luck-preset-blood-ii {
-    --button-background: linear-gradient(110deg, rgba(38, 0, 0, 0.94), rgba(12, 0, 0, 0.94), rgba(62, 0, 0, 0.92));
+    --button-background: linear-gradient(110deg, rgb(38 0 0 / calc(0.94 * var(--card-fill-opacity, 1))), rgb(12 0 0 / calc(0.94 * var(--card-fill-opacity, 1))), rgb(62 0 0 / calc(0.92 * var(--card-fill-opacity, 1))));
     --button-border-color: rgba(255, 50, 35, 0.7);
     box-shadow: inset 0 0 14px rgba(255, 0, 0, 0.2), 0 0 8px rgba(155, 0, 0, 0.35);
 }
 
 .preset-matrix #luck-preset-blood-ii.luck-preset-button--active {
-    --button-background: linear-gradient(110deg, rgba(92, 0, 0, 0.98), rgba(24, 0, 0, 0.98), rgba(128, 18, 0, 0.96));
+    --button-background: linear-gradient(110deg, rgb(92 0 0 / calc(0.98 * var(--card-fill-opacity, 1))), rgb(24 0 0 / calc(0.98 * var(--card-fill-opacity, 1))), rgb(128 18 0 / calc(0.96 * var(--card-fill-opacity, 1))));
     border-color: rgba(255, 135, 70, 1);
     box-shadow: inset 0 0 28px rgba(255, 38, 0, 0.62), 0 0 16px rgba(255, 0, 0, 0.9), 0 0 34px rgba(145, 0, 0, 0.78);
 }
@@ -3956,7 +3956,7 @@ body:not(.reduce-motion):not(.quality-no-shakes) .luck-preset-button--shake.luck
         linear-gradient(var(--accent), var(--accent)) bottom right / var(--roll-console-corner-thickness) var(--roll-console-corner-size) no-repeat,
         linear-gradient(90deg, rgb(var(--accent-rgb) / 0.035) 1px, transparent 1px) 0 0 / 18px 18px,
         linear-gradient(0deg, rgb(var(--accent-rgb) / 0.025) 1px, transparent 1px) 0 0 / 18px 18px,
-        linear-gradient(155deg, rgba(11, 23, 43, 0.94), rgba(4, 10, 22, 0.97));
+        linear-gradient(155deg, rgb(11 23 43 / calc(0.94 * var(--card-fill-opacity, 1))), rgb(4 10 22 / calc(0.97 * var(--card-fill-opacity, 1))));
 }
 
 .control-section--cta.control-section--cta--floating {

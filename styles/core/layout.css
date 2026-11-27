@@ -37,7 +37,7 @@
     position: absolute;
     inset: 1px;
     background: radial-gradient(circle at 50% 0%, var(--surface-overlay-highlight), transparent 40%),
-                var(--surface-overlay-gradient);
+                var(--surface-inner-gradient, var(--surface-overlay-gradient));
     pointer-events: none;
     z-index: 0;
 }
@@ -1385,8 +1385,8 @@
     padding: 13px 12px;
     overflow: hidden;
     background:
-        radial-gradient(circle at 4% 0%, rgb(var(--resource-rgb) / 0.2), transparent 42%),
-        linear-gradient(145deg, rgba(10, 21, 39, 0.96), rgba(4, 10, 22, 0.98));
+        radial-gradient(circle at 4% 0%, rgb(var(--resource-rgb) / calc(0.2 * var(--card-fill-opacity, 1))), transparent 42%),
+        linear-gradient(145deg, rgb(10 21 39 / calc(0.96 * var(--card-fill-opacity, 1))), rgb(4 10 22 / calc(0.98 * var(--card-fill-opacity, 1))));
     border: 1px solid rgb(var(--resource-rgb) / 0.32);
     text-decoration: none;
     color: var(--text-primary);

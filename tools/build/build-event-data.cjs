@@ -7,9 +7,25 @@ const events = fs.readdirSync(directory).filter(file => file.endsWith('.json')).
     if (!/^[a-zA-Z]+\d{2}$/.test(event.id) || typeof event.label !== 'string' || !event.label.trim()
         || !Number.isInteger(event.order) || !['active', 'ended', 'upcoming'].includes(event.status)
         || typeof event.defaultEnabled !== 'boolean' || !Array.isArray(event.auras)
-        || !['default', 'valentine', 'april-fools', 'summer', 'halloween', 'winter', 'easter'].includes(event.theme)
+        || (event.preserveRollDetails !== undefined && typeof event.preserveRollDetails !== 'boolean')
+        || !['default', 'valentine', 'april-fools', 'summer', 'halloween', 'winter', 'easter', 'ado'].includes(event.theme)
         || !/^sigil-[\w-]+$/.test(event.sigilClass)
         || (event.status === 'upcoming' && event.defaultEnabled)) throw new Error(`Invalid event metadata: ${file}`);
+    if (event.defaultEnabledDates !== undefined) {
+        if (!Array.isArray(event.defaultEnabledDates) || !event.defaultEnabledDates.length
+            || new Set(event.defaultEnabledDates).size !== event.defaultEnabledDates.length
+            || event.defaultEnabledDates.some(date => typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)
+                || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date)
+            || typeof event.defaultTimeZone !== 'string') throw new Error(`Invalid concert dates: ${file}`);
+        new Intl.DateTimeFormat('en', { timeZone: event.defaultTimeZone }).format();
+    }
+    if (event.concertSongs !== undefined && (!Array.isArray(event.concertSongs)
+        || !event.concertSongs.length || event.concertSongs.some(song => typeof song?.title !== 'string'
+            || !song.title.trim() || !/^[\w-]{11}$/.test(song.videoId) || !/^[\w-]+\.webm$/.test(song.videoFile)
+            || !fs.existsSync(path.join(root, 'files/videos/events', event.theme, song.videoFile)))
+        || new Set(event.concertSongs.map(song => song.videoId)).size !== event.concertSongs.length)) {
+        throw new Error(`Invalid concert songs: ${file}`);
+    }
     for (const field of ['biomes', 'auraBiomes', 'additionalAuraNames', 'auraDiscoveryTerms']) {
         if (event[field] !== undefined && (!Array.isArray(event[field]) || event[field].some(value => typeof value !== 'string' || !value.trim()))) throw new Error(`Invalid ${field}: ${file}`);
     }

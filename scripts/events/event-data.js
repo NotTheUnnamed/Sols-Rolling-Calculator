@@ -1004,8 +1004,9 @@ globalThis.EventData = Object.freeze({
     "order": 14,
     "theme": "halloween",
     "sigilClass": "sigil-outline-blood",
-    "status": "active",
-    "defaultEnabled": true,
+    "status": "ended",
+    "defaultEnabled": false,
+    "preserveRollDetails": true,
     "auraDiscoveryTerms": [
       "Hallow Point"
     ],
@@ -1200,6 +1201,54 @@ globalThis.EventData = Object.freeze({
       "bloodRain"
     ],
     "glitchEligible": true
+  },
+  "ado26": {
+    "id": "ado26",
+    "label": "Ado's TAKEOVER",
+    "order": 15,
+    "theme": "ado",
+    "sigilClass": "sigil-outline-ado",
+    "status": "active",
+    "defaultEnabled": false,
+    "defaultTimeZone": "Europe/Oslo",
+    "defaultEnabledDates": [
+      "2026-11-28",
+      "2026-12-12",
+      "2026-12-26",
+      "2027-01-09"
+    ],
+    "startsOn": "2026-11-28",
+    "endsOn": "2027-01-23",
+    "sourceUrl": "https://www.universal-music.co.jp/ado/sols-rng/#sols-rng-eng",
+    "expectedAuraCount": 5,
+    "concertSongs": [
+      {
+        "title": "Usseewa",
+        "videoFile": "usseewaAdo.webm",
+        "videoId": "Qp3b-RXtz4w"
+      },
+      {
+        "title": "Show",
+        "videoFile": "showAdo.webm",
+        "videoId": "pgXpM4l_MwI"
+      },
+      {
+        "title": "Odo",
+        "videoFile": "odoAdo.webm",
+        "videoId": "YnSW8ian29w"
+      },
+      {
+        "title": "Vivarium",
+        "videoFile": "vivariumAdo.webm",
+        "videoId": "YvYii6dluM8"
+      },
+      {
+        "title": "Monstruo",
+        "videoFile": "monstruoAdo.webm",
+        "videoId": "4IKHox-DKrM"
+      }
+    ],
+    "auras": []
   }
 });
 globalThis.EventAuras = Object.freeze([...new Map(Object.values(EventData).flatMap(event => event.auras).map(aura => [aura.name, aura])).values()]);

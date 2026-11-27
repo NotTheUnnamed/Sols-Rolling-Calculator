@@ -116,7 +116,8 @@ const entries = pages.map(page => {
     const aura = simulator.get(page.title);
     page = { ...page, required: canonicalBiomeLabel(page.required), exclusive: page.exclusive || Boolean(aura?.nativeBiomes?.length) };
     const event = aura && eventForAura.get(normalize(aura.name));
-    if (event?.status === 'active') {
+    // Ending a documented event must not restore stale wiki odds or biome art.
+    if (event && (event.status === 'active' || event.preserveRollDetails)) {
         const required = [...(aura.nativeBiomes || [])].sort((a, b) => Number(a === 'glitch') - Number(b === 'glitch')).map(biomeLabel).join(' / ');
         page = { ...page, tier: page.tier || 'Event', rarity: odds(aura.chance), nativeRarity: '', required, exclusive: Boolean(required),
             events: [...new Set([...page.events, event.label])], obtainment: page.obtainment || `Enable ${event.label} in the simulator` };
@@ -151,7 +152,7 @@ const entries = pages.map(page => {
         : hasEvent ? 'Event' : page.exclusive ? 'Biome exclusive' : nativeBiomes.length || (page.required && denominator(page.nativeRarity)) || page.categories.includes('Biome-Native') ? 'Biome native'
         : obtainment ? 'Special obtainment' : /unobtainable/i.test(page.rarity) ? 'Unobtainable' : 'Standard';
     for (const alias of [page.title, name, aura?.name].filter(Boolean)) routes[normalize(alias)] = slug;
-    const background = (page.wikiPending || event?.status === 'active' ? backgroundFor(page.required) : '') || biomes.map(backgroundFor).find(Boolean) || '';
+    const background = (page.wikiPending || event?.status === 'active' || event?.preserveRollDetails ? backgroundFor(page.required) : '') || biomes.map(backgroundFor).find(Boolean) || '';
     return { ...page, ...(history.profiles[page.title] ? {} : {mediaPending: true}), obtainment, name, slug, rarityValue: rarity, rarityText, tierKey, kind, location, events: hasEvent ? events : [], nativeBiomes, biomes, background, simulatorName: aura?.name || null, simulatorChance: aura?.chance ?? null, ignoreLuck: Boolean(aura?.ignoreLuck) };
 });
 for (const [alias, target] of Object.entries(reference.aliases)) {

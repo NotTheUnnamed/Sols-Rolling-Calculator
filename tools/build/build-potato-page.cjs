@@ -26,7 +26,7 @@ function buildPotatoPage() {
         .replace(/<title>[^<]*<\/title>/, '<title>Rotato Simulator</title>')
         .replace('</head>', `    <link rel="stylesheet" href="styles/core/minimal.css?v=${version}.layout2">\n</head>`)
         .replace('<body>', '<body class="reduce-motion quality-no-particles quality-no-ui-animations quality-no-shakes quality-no-roll-sigil-animations quality-no-glitch">')
-        .replace(/\s*<script src="scripts\/events\/pumpkin-carver\.js[^>]*><\/script>/g, '')
+        .replace(/\s*<script src="scripts\/events\/ado-collab\.js[^>]*><\/script>/g, '')
         .replace('files/images/other/theUnnamed-flipped.gif', 'files/images/other/theUnnamed.png')
         .replace(/href="#/g, 'href="rotatosimulator/#')
         .replace('<span>Simulation Interface</span>', '<span>Rotato Simulator</span>');
@@ -35,8 +35,7 @@ function buildPotatoPage() {
     for (const name of ['glitch-signal', 'glitch-entry-errors', 'event-atmosphere', 'snow-field']) {
         html = replaceBlock(html, new RegExp(`<div\\b[^>]*class="${name}(?: [^"]*)?"[^>]*>`));
     }
-    html = replaceBlock(html, /<aside\b[^>]*id="pumpkin-decoration"[^>]*>/);
-    html = replaceBlock(html, /<dialog\b[^>]*id="pumpkin-carver"[^>]*>/);
+    html = replaceBlock(html, /<aside\b[^>]*id="ado-decoration"[^>]*>/);
     html = html.replace(/\s*<button\b[^>]*data-quality-option="(?:removeParticles|disableUiAnimations|disableShakes|disableRollAndSigilAnimations|reduceGlitchEffects|removeGlitchEffects)"[^>]*>[\s\S]*?<\/button>/g, '')
         .replace('<div class="quality-settings__menu" id="qualityPreferencesMenu" role="menu">', '<div class="quality-settings__menu" id="qualityPreferencesMenu" hidden>')
         .replace('Fine tune visual performance settings and effects.', 'Visual effects and animations stay off in Rotato Simulator.')

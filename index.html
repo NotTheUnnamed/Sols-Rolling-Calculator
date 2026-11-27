@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sol's RNG Rolling Simulator</title>
-    <meta name="app-build" content="2.222">
+    <meta name="app-build" content="2.23">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/0b0c748c56.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Cinzel:wght@400..900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Creepster&family=Fondamento:ital@0;1&family=Fuzzy+Bubbles:wght@400;700&family=Grenze+Gotisch:wght@100..900&family=Italianno&family=Josefin+Sans:ital,wght@0,600;1,600&family=Jura:wght@300..700&family=Kings&family=Luckiest+Guy&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Michroma&family=Noto+Serif+TC:wght@500;600;700&family=Oswald:wght@200..700&family=Overpass:ital,wght@0,100..900;1,100..900&family=Parisienne&family=Patrick+Hand&family=Playfair+Display:wght@500;600;700&family=Press+Start+2P&family=Roboto+Flex:opsz,wght,XOPQ,XTRA,YOPQ,YTDE,YTFI,YTLC,YTUC@8..144,100..1000,96,468,79,-203,738,514,712&family=Roboto+Mono:ital,wght@0,100;1,100&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sarpanch:wght@400;500;600;700&family=Tangerine:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -35,7 +34,7 @@
             const documentModifiedAt = Number.isFinite(parsedDocumentModifiedAt)
                 ? parsedDocumentModifiedAt
                 : Date.now();
-            const buildCacheKey = '2.222';
+            const buildCacheKey = '2.23';
 
             window.appBuildCacheKey = buildCacheKey;
             window.getVersionedAppAssetUrl = path => {
@@ -149,48 +148,63 @@
             });
         })();
     </script>
-    <link rel="stylesheet" href="styles/core/base.css?v=2.222">
-    <link rel="stylesheet" href="styles/core/layout.css?v=2.222.supporters1">
-    <link rel="stylesheet" href="styles/components/components.css?v=2.222.buffs1">
-    <link rel="stylesheet" href="styles/core/utilities.css?v=2.222.notes2.issue2">
-    <link rel="stylesheet" href="styles/titles/wiki-title-fonts.css?v=2.222">
-    <link rel="stylesheet" href="styles/titles/wiki-title-effects.css?v=2.222">
-    <link rel="stylesheet" href="styles/titles/wiki-title-repairs.css?v=2.222">
-    <link rel="stylesheet" href="styles/titles/wiki-titles.css?v=2.222">
-    <link rel="stylesheet" href="styles/components/equipment.css?v=2.222">
-    <link rel="stylesheet" href="styles/components/help-footer.css?v=2.222.portal4">
-    <link rel="stylesheet" href="styles/auras/aura-video-player.css?v=2.222">
-    <link rel="stylesheet" href="styles/events/events.css?v=2.222">
-    <link rel="stylesheet" href="styles/events/pumpkin-carver.css?v=2.222">
-    <link rel="stylesheet" href="styles/components/result-summary.css?v=2.222">
-    <script src="scripts/core/utils.js?v=2.222" defer></script>
-    <script src="scripts/core/runtime.js?v=2.222" defer></script>
-    <script src="scripts/core/app-cache.js?v=2.222" defer></script>
-    <script src="scripts/simulator/gear-luck.js?v=2.222" defer></script>
-    <script src="scripts/ui/equipment-presentation.js?v=2.222" defer></script>
-    <script src="scripts/events/event-data.js?v=2.222" defer></script>
-    <script src="scripts/events/event-controls.js?v=2.222" defer></script>
-    <script src="scripts/events/pumpkin-carver.js?v=2.222" defer></script>
-    <script src="scripts/simulator/simulation-core.js?v=2.222" defer></script>
-    <script src="scripts/core/state.js?v=2.222" defer></script>
-    <script src="scripts/core/media-loader.js?v=2.222" defer></script>
-    <script src="scripts/ui/overlays.js?v=2.222.issue2" defer></script>
-    <script src="scripts/titles/wiki-title-data.js?v=2.222" defer></script>
-    <script src="scripts/titles/wiki-title-repairs.js?v=2.222" defer></script>
-    <script src="scripts/titles/wiki-titles.js?v=2.222" defer></script>
-    <script src="scripts/auras/aura-routes.js?v=2.222" defer></script>
-    <script src="scripts/auras/aura-links.js?v=2.222" defer></script>
-    <script src="scripts/ui/interface-select.js?v=2.222" defer></script>
-    <script src="scripts/auras/aura-title-layout.js?v=2.222" defer></script>
-    <script src="scripts/ui/biome-background.js?v=2.222" defer></script>
-    <script src="scripts/ui/result-summary.js?v=2.222" defer></script>
-    <script src="scripts/simulator/main.js?v=2.222.layout4.supporters1" defer></script>
-    <script src="scripts/core/session-return.js?v=2.222.restore2" defer></script>
-    <script src="scripts/ui/potato-portal.js?v=2.222.portal3" defer></script>
-    <script src="scripts/auras/aura-video-player.js?v=2.222" defer></script>
-    <script src="scripts/auras/aura-directory-preferences.js?v=2.222" defer></script>
+    <link rel="stylesheet" href="styles/core/base.css?v=2.23.ado1">
+    <link rel="stylesheet" href="styles/core/layout.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/components/components.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/core/utilities.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/titles/wiki-title-fonts.css?v=2.23">
+    <link rel="stylesheet" href="styles/titles/wiki-title-effects.css?v=2.23">
+    <link rel="stylesheet" href="styles/titles/wiki-title-repairs.css?v=2.23">
+    <link rel="stylesheet" href="styles/titles/wiki-titles.css?v=2.23">
+    <link rel="stylesheet" href="styles/components/equipment.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/components/help-footer.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/auras/aura-video-player.css?v=2.23">
+    <link rel="stylesheet" href="styles/events/events.css?v=2.23">
+    <link rel="stylesheet" href="styles/events/ado-collab.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/events/ado-theme.css?v=2.23.ado9">
+    <link rel="stylesheet" href="styles/components/result-summary.css?v=2.23.ado9">
+    <script src="scripts/core/utils.js?v=2.23" defer></script>
+    <script src="scripts/core/runtime.js?v=2.23" defer></script>
+    <script src="scripts/core/app-cache.js?v=2.23" defer></script>
+    <script src="scripts/simulator/gear-luck.js?v=2.23" defer></script>
+    <script src="scripts/ui/equipment-presentation.js?v=2.23" defer></script>
+    <script src="scripts/events/event-data.js?v=2.23.ado5" defer></script>
+    <script src="scripts/events/event-controls.js?v=2.23.ado5" defer></script>
+    <script src="scripts/events/ado-collab.js?v=2.23.ado8" defer></script>
+    <script src="scripts/events/ado-concert-music.js?v=2.23.ado9" defer></script>
+    <script src="scripts/simulator/simulation-core.js?v=2.23" defer></script>
+    <script src="scripts/core/state.js?v=2.23" defer></script>
+    <script src="scripts/core/media-loader.js?v=2.23" defer></script>
+    <script src="scripts/ui/overlays.js?v=2.23" defer></script>
+    <script src="scripts/titles/wiki-title-data.js?v=2.23" defer></script>
+    <script src="scripts/titles/wiki-title-repairs.js?v=2.23" defer></script>
+    <script src="scripts/titles/wiki-titles.js?v=2.23" defer></script>
+    <script src="scripts/auras/aura-routes.js?v=2.23" defer></script>
+    <script src="scripts/auras/aura-links.js?v=2.23" defer></script>
+    <script src="scripts/ui/interface-select.js?v=2.23" defer></script>
+    <script src="scripts/auras/aura-title-layout.js?v=2.23" defer></script>
+    <script src="scripts/ui/biome-background.js?v=2.23" defer></script>
+    <script src="scripts/ui/result-summary.js?v=2.23" defer></script>
+    <script src="scripts/simulator/main.js?v=2.23.ado10" defer></script>
+    <script src="scripts/core/session-return.js?v=2.23.ado5" defer></script>
+    <script src="scripts/ui/potato-portal.js?v=2.23.ado10" defer></script>
+    <script src="scripts/auras/aura-video-player.js?v=2.23.ado5" defer></script>
+    <script src="scripts/auras/aura-directory-preferences.js?v=2.23" defer></script>
 </head>
 <body>
+    <dialog class="photosensitivity-warning" id="photosensitivityWarning" aria-labelledby="photosensitivityWarningTitle" aria-describedby="photosensitivityWarningMessage">
+        <header class="photosensitivity-warning__header">
+            <span class="photosensitivity-warning__icon" aria-hidden="true">!</span>
+            <h2 id="photosensitivityWarningTitle">Photosensitivity warning</h2>
+        </header>
+        <div class="photosensitivity-warning__body">
+            <p id="photosensitivityWarningMessage">Sol’s RNG cutscenes, music videos, and simulator effects may contain flashing lights and rapidly changing patterns. These can trigger seizures in people with photosensitive epilepsy.</p>
+            <p class="photosensitivity-warning__preferences">Reduce glitch and animation effects in <strong>Settings → Preferences</strong>.</p>
+        </div>
+        <form class="photosensitivity-warning__actions" method="dialog">
+            <button type="submit" class="interface-button" autofocus>Continue to simulator <span aria-hidden="true">→</span></button>
+        </form>
+    </dialog>
     <div class="interface-backdrop" aria-hidden="true">
         <video class="interface-backdrop__video" autoplay loop muted playsinline preload="none" aria-hidden="true"></video>
         <div class="interface-backdrop__veil"></div>
@@ -264,6 +278,11 @@
             <span class="event-cobweb event-cobweb--top-right"></span>
             <span class="event-cobweb event-cobweb--side-left"></span>
             <span class="event-cobweb event-cobweb--side-right"></span>
+        </div>
+        <div class="ado-stage">
+            <svg class="ado-stage__rose ado-stage__rose--left" viewBox="0 0 120 160" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M61 75C22 76 12 44 29 25 37 7 63 7 74 15 98 11 114 38 95 58 93 74 78 80 61 75Z"/><path d="M61 75C37 62 30 35 48 25 69 13 93 28 89 47 87 62 65 68 52 54 39 39 58 30 69 39 81 49 63 57 58 47M29 25C30 54 62 65 89 47M74 15C61 21 50 37 52 54M95 58C73 58 55 71 61 75M61 75C55 101 72 120 56 153M59 113C35 111 29 93 31 91 52 89 66 101 59 113ZM62 130C89 124 94 106 91 103 70 102 57 116 62 130Z"/></svg>
+            <svg class="ado-stage__rose ado-stage__rose--right" viewBox="0 0 120 160" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M61 75C22 76 12 44 29 25 37 7 63 7 74 15 98 11 114 38 95 58 93 74 78 80 61 75Z"/><path d="M61 75C37 62 30 35 48 25 69 13 93 28 89 47 87 62 65 68 52 54 39 39 58 30 69 39 81 49 63 57 58 47M29 25C30 54 62 65 89 47M74 15C61 21 50 37 52 54M95 58C73 58 55 71 61 75M61 75C55 101 72 120 56 153M59 113C35 111 29 93 31 91 52 89 66 101 59 113ZM62 130C89 124 94 106 91 103 70 102 57 116 62 130Z"/></svg>
+            <div class="ado-stage__petals"><span></span><span></span><span></span><span></span><span></span></div>
         </div>
     </div>
     <div class="snow-field" id="snowField" aria-hidden="true"></div>
@@ -445,9 +464,9 @@
                         <h1 class="banner__title">Sol's RNG Rolling Simulator</h1>
                     </div>
                     <div class="banner__subtitle masthead-console__metadata">
-                        <button type="button" class="banner__version-button masthead-console__meta-card masthead-console__meta-card--version masthead-console__version" id="versionInfoButton" aria-haspopup="dialog" aria-expanded="false" data-version-id="v2.222">
+                        <button type="button" class="banner__version-button masthead-console__meta-card masthead-console__meta-card--version masthead-console__version" id="versionInfoButton" aria-haspopup="dialog" aria-expanded="false" data-version-id="v2.23">
                             <i class="fa-solid fa-code-branch" aria-hidden="true"></i>
-                            <span><small>Current build</small><strong>Version 2.222</strong></span>
+                            <span><small>Current build</small><strong>Version 2.23</strong></span>
                         </button>
                         <span class="masthead-console__meta-card banner__subtitle-author">
                             <span class="masthead-console__creator-avatar-flip" aria-hidden="true">
@@ -541,6 +560,43 @@
 
 
 
+        <section class="ado-theme-banner" aria-label="Ado's TAKEOVER">
+            <div class="ado-theme-banner__backdrop" aria-hidden="true">
+                <img src="files/images/events/ado/hibana-artwork.webp" alt="" loading="lazy" decoding="async">
+            </div>
+            <div class="ado-theme-banner__intro">
+                <div class="ado-theme-banner__copy">
+                    <span>Sol's RNG × Ado</span>
+                    <h2><span class="ado-type">Ado's</span> <em>TAKEOVER</em></h2>
+                    <p class="ado-radio__setlist ado-type">Usseewa · Show · Odo · Vivarium · Monstruo</p>
+                    <p class="ado-radio__credit">Songs performed by <a class="ado-type" href="https://www.youtube.com/@Ado1024" target="_blank" rel="noopener">Ado</a></p>
+                </div>
+                <div class="ado-theme-banner__portrait-dock"></div>
+            </div>
+            <section class="ado-radio" id="ado-radio" aria-label="Ado concert music" data-video-mode="miniplayer">
+                <div class="ado-radio__player" id="ado-video-mount">
+                    <video class="ado-radio__video" id="ado-concert-player" aria-label="Usseewa by Ado" preload="none" playsinline poster="files/images/events/ado/takeover-key-art.png"></video>
+                    <p class="ado-radio__background-note" id="ado-video-background-note" hidden>Showing the video as the simulator background.</p>
+                </div>
+                <div class="ado-radio__controls">
+                    <button type="button" id="ado-radio-play">Play music</button>
+                    <button type="button" id="ado-radio-next" aria-label="Next Ado song">Next song</button>
+                    <details class="ado-radio__mode" id="ado-video-mode">
+                        <summary>Video mode <span aria-hidden="true">▾</span></summary>
+                        <div class="ado-radio__options" role="group" aria-label="Video display mode">
+                            <button type="button" data-ado-video-mode="miniplayer" aria-pressed="true">Miniplayer</button>
+                            <button type="button" data-ado-video-mode="fullscreen" aria-pressed="false">Fullscreen</button>
+                            <button type="button" data-ado-video-mode="background" aria-pressed="false">Background</button>
+                        </div>
+                    </details>
+                </div>
+                <div class="ado-radio__metadata">
+                    <p class="ado-radio__status" role="status"><span class="ado-type" id="ado-radio-song">Usseewa · Ado</span><span id="ado-radio-position">1 / 5</span></p>
+                    <a class="ado-radio__source" id="ado-radio-source" href="https://www.youtube.com/watch?v=Qp3b-RXtz4w" target="_blank" rel="noopener">YouTube ↗</a>
+                </div>
+                <p class="ado-radio__message" id="ado-radio-message" role="status" hidden></p>
+            </section>
+        </section>
         <div class="interface-layout">
             <aside class="surface surface--side resource-panel" aria-labelledby="resources-heading">
                 <header class="surface__header resource-panel__header">
@@ -587,7 +643,7 @@
                     </a>
                     <a class="resource-link resource-link--community" href="https://www.discord.gg/m6k7Jagm3v" target="_blank" rel="noopener">
                         <span class="resource-link__icon" aria-hidden="true">
-                            <img class="resource-link__image resource-link__image--unnamedrng" src="files/images/icons/logos/spookySolsRollingSimulatorLogo.png" alt="" loading="lazy" decoding="async">
+                            <img class="resource-link__image resource-link__image--unnamedrng" src="files/images/icons/logos/cuteSolsRollingSimulatorLogo.png" alt="" loading="lazy" decoding="async">
                         </span>
                         <span class="resource-link__content">
                             <span class="resource-link__category">Main Community</span>
@@ -862,6 +918,15 @@
                             <span class="toggle__track"></span>
                             <span class="toggle__thumb"></span>
                         </label>
+                    </div>
+                    <div id="ado-blessing-wrapper" class="form-field form-field--toggle form-field--ado">
+                        <label class="form-field__label sigil-outline-ado" for="ado-blessing-toggle">Ado's Blessing</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="ado-blessing-toggle" class="toggle__input" aria-describedby="ado-blessing-note" aria-label="Ado's Blessing">
+                            <span class="toggle__track"></span>
+                            <span class="toggle__thumb"></span>
+                        </label>
+                        <small class="ado-blessing-note" id="ado-blessing-note">Event aura access · Details pending. This switch will unlock Ado auras once their names and odds are confirmed; it has no effect on rolls yet.</small>
                     </div>
                 </section>
                 <div class="roll-console__footer">
@@ -1141,7 +1206,7 @@
                             <span class="form-field__label" id="event-selector-label">Events</span>
                             <div class="event-picker__controls">
                                 <details class="interface-select interface-select--multi event-picker" id="event-selector" data-select="event-selector">
-                                    <summary id="event-selector-summary" class="form-field__input form-field__input--event interface-select__summary" aria-expanded="false" aria-controls="event-picker-panel"><span class="sr-only">Events: </span><span data-event-summary>Halloween 2026</span></summary>
+                                    <summary id="event-selector-summary" class="form-field__input form-field__input--event interface-select__summary" aria-expanded="false" aria-controls="event-picker-panel"><span class="sr-only">Events: </span><span data-event-summary>No events enabled</span></summary>
                                     <div class="interface-select__menu event-picker__panel" id="event-picker-panel" role="group" aria-labelledby="event-selector-label">
                                         <label class="event-picker__search"><span class="sr-only">Search events</span><input class="form-field__input" id="event-search" type="search" placeholder="Find an event or year…" autocomplete="off"></label>
                                         <div class="event-picker__options" id="event-option-list"></div>
@@ -1636,7 +1701,7 @@
                     <strong>People behind the simulator</strong>
                     <span>Explore cutscenes, music, biome media and wiki artwork</span>
                 </span>
-                <span class="footer-credits__summary-count">25 contributions</span>
+                <span class="footer-credits__summary-count">38 contributions</span>
                 <i class="fa-solid fa-chevron-down footer-credits__summary-chevron" aria-hidden="true"></i>
             </summary>
             <div class="footer-credits__panel">
@@ -1659,10 +1724,16 @@
                         <button type="button" class="footer-credits__filter" data-credit-filter="media" aria-pressed="false">Audio & Biomes</button>
                         <button type="button" class="footer-credits__filter" data-credit-filter="artwork" aria-pressed="false">Artwork</button>
                     </div>
-                    <span class="footer-credits__result-count" id="creditsResultCount" role="status" aria-live="polite">25 contributions</span>
+                    <span class="footer-credits__result-count" id="creditsResultCount" role="status" aria-live="polite">38 contributions</span>
                 </div>
                 <ul class="footer-credits__list" id="creditsList">
                 <li class="footer-credits__item footer-credits__item--wiki-artwork" data-credit-category="artwork">Aura and item title artwork, fonts, colors, and effects adapted from <a href="https://sol-rng.fandom.com/wiki/Auras" target="_blank" rel="noopener">Sol's RNG Wiki contributors</a>. Community artwork is shared under <a href="https://www.fandom.com/licensing" target="_blank" rel="noopener">CC BY-SA, unless otherwise noted</a></li>
+                <li class="footer-credits__item" data-credit-category="media"><span class="footer-credits__item-heading"><span class="ado-type sigil-outline-ado">Ado · Usseewa</span></span><span class="footer-credits__item-source">concert song performed by <a href="https://www.youtube.com/watch?v=Qp3b-RXtz4w" target="_blank" rel="noopener"><span class="ado-type">Ado</span> — official recording</a></span></li>
+                <li class="footer-credits__item" data-credit-category="media"><span class="footer-credits__item-heading"><span class="ado-type sigil-outline-ado">Ado · Show</span></span><span class="footer-credits__item-source">concert song performed by <a href="https://www.youtube.com/watch?v=pgXpM4l_MwI" target="_blank" rel="noopener"><span class="ado-type">Ado</span> — official recording</a></span></li>
+                <li class="footer-credits__item" data-credit-category="media"><span class="footer-credits__item-heading"><span class="ado-type sigil-outline-ado">Ado · Odo</span></span><span class="footer-credits__item-source">concert song performed by <a href="https://www.youtube.com/watch?v=YnSW8ian29w" target="_blank" rel="noopener"><span class="ado-type">Ado</span> — official recording</a></span></li>
+                <li class="footer-credits__item" data-credit-category="media"><span class="footer-credits__item-heading"><span class="ado-type sigil-outline-ado">Ado · Vivarium</span></span><span class="footer-credits__item-source">concert song performed by <a href="https://www.youtube.com/watch?v=YvYii6dluM8" target="_blank" rel="noopener"><span class="ado-type">Ado</span> — official recording</a></span></li>
+                <li class="footer-credits__item" data-credit-category="media"><span class="footer-credits__item-heading"><span class="ado-type sigil-outline-ado">Ado · Monstruo</span></span><span class="footer-credits__item-source">concert song performed by <a href="https://www.youtube.com/watch?v=4IKHox-DKrM" target="_blank" rel="noopener"><span class="ado-type">Ado</span> — official recording</a></span></li>
+                <li class="footer-credits__item" data-credit-category="artwork"><span class="footer-credits__item-heading"><span class="ado-type sigil-outline-ado">Ado · Hibana</span></span><span class="footer-credits__item-source">TAKEOVER card illustration by <a href="https://cloud9pro.co.jp/artist/profile/orihara/" target="_blank" rel="noopener">ORIHARA</a> · <a href="https://sp.universal-music.co.jp/ado/hibana/" target="_blank" rel="noopener">Official Hibana tour artwork</a></span></li>
                 <li class="footer-credits__item"><span class="footer-credits__item-heading"><span class="sigil-outline-glitch">Glitch</span></span><span class="footer-credits__item-source">biome backdrop courtesy of <a href="https://www.youtube.com/watch?v=Efxaiefo3QY" target="_blank" rel="noopener">ComedicChicken</a></span></li>
                 <li class="footer-credits__item"><span class="footer-credits__item-heading"><span class="changelog-aura-sigil" data-changelog-aura-sigil="Erebus">Erebus</span></span><span class="footer-credits__item-source">cutscene courtesy of <a href="https://www.youtube.com/watch?v=ift10zMOVRk" target="_blank" rel="noopener">4zell</a></span></li>
                 <li class="footer-credits__item"><span class="footer-credits__item-heading"><span class="changelog-aura-sigil" data-changelog-aura-sigil="Lamenthyr">Lamenthyr</span></span><span class="footer-credits__item-source">cutscene courtesy of <a href="https://www.youtube.com/watch?v=DwEzY_nA054" target="_blank" rel="noopener">Ray</a></span></li>
@@ -1835,6 +1906,7 @@
                 <span id="cutsceneWarningTitle" class="cutscene-warning__note">Enable automatic fullscreen?</span>
             </p>
             <p class="cutscene-warning__message">Cutscenes can enter fullscreen automatically and return to the page when playback ends. If you were already in fullscreen, you will stay there.</p>
+            <p class="cutscene-warning__message photosensitivity-note">Cutscenes can contain flashing lights and patterns that may trigger photosensitive seizures.</p>
             <p class="cutscene-warning__message cutscene-warning__message--subtle">If your browser blocks fullscreen, the cutscene will still play in the page. You can change this anytime in Rolling Settings.</p>
             <div class="cutscene-warning__actions">
                 <button type="button" class="interface-button interface-button--minor" id="cutsceneWarningConfirm">Yes, enable</button>
@@ -2277,6 +2349,54 @@
             </div>
 
             <div class="changelog-modal__panels" data-changelog-panels>
+                <section id="changelog-panel-v223" class="changelog-modal__panel changelog-ado" data-changelog-panel="v2.23" data-changelog-label="v2.23" role="tabpanel" tabindex="0" hidden>
+                    <header class="changelog-modal__header">
+                        <h2 class="changelog-modal__title">Version 2.23 Update Notes</h2>
+                        <span class="changelog-tab__subtitle sigil-outline-ado">Sol's RNG × Ado · TAKEOVER preparations</span>
+                        <p class="changelog-modal__meta">Prepared 2026/11/27 · Planned release 2026/11/28</p>
+                    </header>
+                    <figure class="changelog-ado__hero">
+                        <img src="files/images/events/ado/takeover-key-art.png" width="2000" height="1125" alt="Official Sol's RNG × Ado collaboration artwork showing Ado's concert avatar" loading="lazy" decoding="async">
+                        <figcaption>Official collaboration artwork · <a href="https://www.universal-music.co.jp/ado/sols-rng/#sols-rng-eng" target="_blank" rel="noopener">Universal Music Japan</a></figcaption>
+                    </figure>
+                    <ul class="changelog-modal__list changelog-modal__list--grouped">
+                        <li class="changelog-release-group">
+                            <h3>Meet Ado</h3>
+                            <p>Ado is a Japanese singer known for her powerful vocals. She made her major debut with “Usseewa” in 2020 and sang Uta's songs for ONE PIECE FILM RED. Her 2025 world tour visited 33 cities. <a href="https://www.universal-music.co.jp/ado/biography/" target="_blank" rel="noopener">Official biography ↗</a></p>
+                        </li>
+                        <li class="changelog-release-group">
+                            <h3 class="sigil-outline-ado">Ado's TAKEOVER</h3>
+                            <p>The collaboration runs <strong>28 November 2026 – 23 January 2027</strong>, with four in-game avatar concerts, every other Saturday.</p>
+                            <table class="changelog-ado__schedule">
+                                <caption>Main concerts · Central European Time (CET)</caption>
+                                <thead><tr><th scope="col">Saturday</th><th scope="col">Start</th></tr></thead>
+                                <tbody>
+                                    <tr><td><time datetime="2026-11-28T09:10:00+01:00">28 November 2026</time></td><td>09:10 CET</td></tr>
+                                    <tr><td><time datetime="2026-12-12T09:10:00+01:00">12 December 2026</time></td><td>09:10 CET</td></tr>
+                                    <tr><td><time datetime="2026-12-26T09:10:00+01:00">26 December 2026</time></td><td>09:10 CET</td></tr>
+                                    <tr><td><time datetime="2027-01-09T09:10:00+01:00">9 January 2027</time></td><td>09:10 CET</td></tr>
+                                </tbody>
+                            </table>
+                            <p>09:10 CET = 08:10 UTC = 17:10 JST. Each show lasts approximately 70 minutes.</p>
+                            <p>Announced songs: “Usseewa,” “Show,” “Odo,” “Vivarium,” and “Monstruo.” Five song-inspired event auras are planned; these song titles are not confirmed aura names.</p>
+                            <p>Ticketed mini concerts play one full song for up to 20 players. Tickets come from free/paid season passes, Lime quests, Memory Match, or Robux packages. Concerts offer special luck buffs; main and mini concert effects may differ.</p>
+                            <p><a href="https://www.universal-music.co.jp/ado/sols-rng/#sols-rng-eng" target="_blank" rel="noopener">Official event details ↗</a> · Checked 27 November 2026. Times and details may change.</p>
+                        </li>
+                        <li class="changelog-release-group">
+                            <h3>Calculator preparations</h3>
+                            <ul class="changelog-release-group__list">
+                                <li>Halloween 2026 has ended and is off by default. Select it in Events to simulate its historical auras and biomes.</li>
+                                <li>Ado's official portrait replaces the pumpkin workshop. Click it for a blue encore animation with the supplied sound in Other Effects, then open the official collaboration page in a new tab.</li>
+                                <li>Ado's Blessing is beside the other buff switches and is included when restoring a session or resetting buffs.</li>
+                                <li>Select Ado's TAKEOVER in Events for its cobalt-blue stage theme, rose details and concert artwork. It defaults on only for 28 November, 12 and 26 December 2026, and 9 January 2027, from midnight to midnight CET. The dates never repeat annually; you can preview the theme manually on other days.</li>
+                                <li>Ado's music videos play directly in the simulator and repeat the five-song setlist. Video mode offers Miniplayer, Fullscreen with the aura media player, and Background. The TAKEOVER card features ORIHARA’s Hibana illustration, which scrolls at 70% speed. The official recordings are linked in Credits.</li>
+                                <li>Ado's music distorts in sync with Glitch bursts and follows your Glitch effect preferences. Card backgrounds are 30% more transparent during the TAKEOVER.</li>
+                                <li>A photosensitivity warning appears on your first visit after this update. The automatic fullscreen cutscene prompt also includes a short warning.</li>
+                            </ul>
+                            <p class="changelog-ado__pending"><strong>Aura details pending.</strong> Names, rarities, buff strength and duration remain unconfirmed. Ado's Blessing is prepared to gate event aura access; it currently changes neither luck nor roll results. The Ado event theme can be selected while its roll data is pending.</p>
+                        </li>
+                    </ul>
+                </section>
                 <section id="changelog-panel-v2220" class="changelog-modal__panel changelog-eon130 changelog-halloween26" data-changelog-panel="v2.220" data-changelog-label="v2.220" role="tabpanel" tabindex="0" hidden>
                     <header class="changelog-modal__header">
                         <h2 class="changelog-modal__title">Version 2.220 Update Notes</h2>
@@ -4134,9 +4254,7 @@
                         </ul>
                         <li>Fixed some icons not appearing.</li>
                     </ul>
-                    <h3>Thanks to Chesser for Donating 5$!
-                        <img src="files/images/other/chessarDonation.png" width="555" loading="lazy" decoding="async" alt="Chessar donation screenshot">
-                    </h3>
+                    <h3>Thanks to Chesser for Donating 5$!</h3>
                     <h3>I'm heading away for the next week so April Fools will have to wait until after 7th of April <span class="tinyClass">Sorry /*_*\</span></h3>
                     <p>If there's any bugs you encounter, please DM me here <a href="https://discord.com/users/611204110955446301" class="subtitleClass" target="_blank" rel="noopener">@not.unnamed</a></p>
                 </section>
@@ -4521,6 +4639,10 @@
             <div data-biome-buff-details="astrald" hidden>
                 <strong>Astrald's Blessing</strong><p>×1.2 Total Luck Multiplier and makes Astral : Astrald obtainable outside Limbo while enabled.</p>
             </div>
+            <div data-biome-buff-details="ado" hidden>
+                <strong class="sigil-outline-ado">Ado's Blessing</strong>
+                <p>Event aura access is prepared. Aura names, odds and buff details are pending; this switch has no effect on luck or roll results yet.</p>
+            </div>
         </div>
         <button type="button" class="biome-buff biome-buff--dev" data-biome-buff="dev" aria-label="Developer biome Admin Abuse" aria-controls="biomeBuffTooltip" aria-expanded="false" hidden>
             <img src="files/images/icons/biomes/anotherRealmBiomeIcon.png" alt="" width="28" height="28"><span data-dev-buff-multiplier>×1.2</span>
@@ -4555,6 +4677,9 @@
         <button type="button" class="biome-buff" data-biome-buff="astrald" aria-label="Astrald's Blessing: 1.2 times total luck and Astral Astrald obtainable" aria-controls="biomeBuffTooltip" aria-expanded="false" hidden>
             <img src="files/images/icons/buffs/astraldBuff.png" alt="" width="28" height="28"><span>×1.2</span>
         </button>
+        <button type="button" class="biome-buff" data-biome-buff="ado" aria-label="Ado's Blessing: aura details pending" aria-controls="biomeBuffTooltip" aria-expanded="false" hidden>
+            <img src="files/images/events/ado/ado-portrait.jpg" alt="" width="28" height="28"><span>Ado</span>
+        </button>
         <button type="button" class="biome-buff biome-buffs__reset" id="resetAllLuckButton" aria-label="Reset Everything" title="Reset all luck presets, equipment, and optional buffs" onclick="resetAllLuckPresets()">
             <i class="fa-solid fa-rotate-left" aria-hidden="true"></i><span>Reset<br>Everything</span>
         </button>
@@ -4566,28 +4691,13 @@
             <button type="button" class="interface-button interface-button--ghost session-return__dismiss" id="sessionReturnDismiss" aria-label="Start a new session">×</button>
         </div>
     </section>
-    <aside class="pumpkin-decoration" id="pumpkin-decoration" aria-label="Halloween pumpkin" hidden>
-        <button type="button" id="open-pumpkin-carver" aria-haspopup="dialog" aria-controls="pumpkin-carver"><img id="pumpkin-thumbnail" src="files/images/events/halloween/pumpkin.png" width="118" height="100" alt="Your Halloween pumpkin"><span>Carve your pumpkin</span></button>
+    <aside class="ado-decoration" id="ado-decoration" aria-label="Sol's RNG and Ado collaboration">
+        <a class="ado-decoration__link" id="ado-collab-link" href="https://www.universal-music.co.jp/ado/sols-rng/#sols-rng-eng" aria-label="Meet Ado — visit the official collaboration website in a new tab" target="_blank" rel="noopener">
+            <span class="ado-decoration__portrait"><img src="files/images/events/ado/ado-portrait.jpg" width="570" height="700" alt="Ado's official illustrated portrait" decoding="async"></span>
+            <span class="ado-decoration__caption"><strong>Sol's RNG × Ado</strong><small>Meet Ado ↗</small></span>
+        </a>
+        <span class="sr-only" id="ado-collab-status" role="status" aria-live="polite"></span>
+        <audio id="ado-collab-sound" preload="none" data-src="files/sounds/other/adoSFX.mp3" data-audio-channel="effects"></audio>
     </aside>
-    <dialog class="surface surface--modal pumpkin-carver" id="pumpkin-carver" aria-labelledby="pumpkin-carver-title" aria-describedby="pumpkin-carver-hint">
-        <div class="popup-console__rail" aria-hidden="true"><span class="popup-console__rail-code">HALLOWEEN // 2026</span><span class="popup-console__rail-state">Pumpkin workshop</span></div>
-        <header class="pumpkin-carver__header"><div><span class="pumpkin-carver__eyebrow">Halloween 2026 · Make a little mischief</span><h2 id="pumpkin-carver-title">Pumpkin workshop</h2></div><button type="button" class="interface-button interface-button--ghost pumpkin-carver__close" id="close-pumpkin-carver" aria-label="Close pumpkin workshop">×</button></header>
-        <p id="pumpkin-carver-hint">Draw a shape, then release to carve it. Each cut lights up from within.</p>
-        <div class="pumpkin-carver__workbench">
-            <div class="pumpkin-carver__canvas-panel">
-                <div class="pumpkin-carver__canvas-label" aria-hidden="true"><span>01 / Your canvas</span><span>✦ Live glow</span></div>
-                <div class="pumpkin-carver__stage" id="pumpkin-stage"><canvas id="pumpkin-canvas" width="900" height="762" tabindex="0" aria-label="Pumpkin carving surface" aria-describedby="pumpkin-keyboard-hint"></canvas></div>
-                <div class="pumpkin-carver__canvas-caption"><span>Draw freely · Release to carve</span><span><b data-pumpkin-cut-count>0</b> / 64 cuts</span></div>
-            </div>
-            <aside class="pumpkin-carver__toolbox" aria-label="Carving tools">
-                <h3>02 / Carving kit</h3>
-                <div class="pumpkin-carver__freehand"><span aria-hidden="true">✎</span><div><strong>Freehand</strong><small>Trace your own shapes on the pumpkin.</small></div></div>
-                <div class="pumpkin-carver__shapes" role="group" aria-label="Ready-made carving shapes"><span>Quick cuts</span><button type="button" class="interface-button interface-button--ghost" data-pumpkin-shape="eyes"><svg viewBox="0 0 48 32" aria-hidden="true"><path d="M4 25 15 7 21 25ZM27 25 33 7 44 25Z"/></svg><span>Triangle eyes</span></button><button type="button" class="interface-button interface-button--ghost" data-pumpkin-shape="smile"><svg viewBox="0 0 48 32" aria-hidden="true"><path d="M5 10Q24 23 43 10Q36 36 24 27Q12 30 5 10Z"/></svg><span>Smile</span></button><button type="button" class="interface-button interface-button--ghost" data-pumpkin-shape="star"><svg viewBox="0 0 48 32" aria-hidden="true"><path d="m24 3 4 9 11 1-8 7 2 10-9-5-9 5 2-10-8-7 11-1Z"/></svg><span>Star</span></button></div>
-                <details class="pumpkin-carver__keyboard"><summary>Keyboard controls</summary><p id="pumpkin-keyboard-hint">Focus the pumpkin. Move with arrow keys, add points with Space, and carve with Enter. Escape cancels an unfinished cut.</p></details>
-            </aside>
-        </div>
-        <p class="pumpkin-carver__status" id="pumpkin-status" role="status" aria-live="polite"></p>
-        <footer class="pumpkin-carver__footer"><div class="pumpkin-carver__actions"><button type="button" class="interface-button interface-button--ghost" id="pumpkin-undo" disabled>↶ Undo</button><button type="button" class="interface-button interface-button--ghost" id="pumpkin-reset" disabled>↺ Start over</button></div><div class="pumpkin-carver__save"><small>Keep your creation on this device</small><button type="button" class="interface-button" id="pumpkin-done">✓ Save pumpkin</button></div></footer>
-    </dialog>
 </body>
 </html>

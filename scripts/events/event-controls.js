@@ -3,7 +3,45 @@
     let configuration;
     const rows = [];
     let groups = [];
-    const locked = event => event.defaultEnabled && event.status !== 'ended';
+    const scheduleDays = new Map();
+    const dateFormatters = new Map();
+    let scheduleTimer;
+    const scheduled = event => Array.isArray(event.defaultEnabledDates);
+    const locked = event => !scheduled(event) && event.defaultEnabled && event.status !== 'ended';
+    function yearsForEvent(event) {
+        const start = event.startsOn?.slice(0, 4) ?? event.label.match(/\d{4}$/)?.[0];
+        const end = event.endsOn?.slice(0, 4);
+        return [...new Set([start, end].filter(year => /^\d{4}$/.test(year)))];
+    }
+
+    function dateKey(event, now = Date.now()) {
+        const timeZone = event.defaultTimeZone || 'UTC';
+        if (!dateFormatters.has(timeZone)) dateFormatters.set(timeZone,
+            new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }));
+        const parts = Object.fromEntries(dateFormatters.get(timeZone).formatToParts(now).map(part => [part.type, part.value]));
+        return `${parts.year}-${parts.month}-${parts.day}`;
+    }
+    function defaultEnabled(event, now = Date.now()) {
+        if (event.status === 'upcoming') return false;
+        return scheduled(event) ? event.status !== 'ended' && event.defaultEnabledDates.includes(dateKey(event, now)) : event.defaultEnabled;
+    }
+    function refreshSchedule() {
+        clearTimeout(scheduleTimer);
+        if (!configuration) return;
+        for (const event of configuration.events.filter(scheduled)) {
+            const day = dateKey(event);
+            if (scheduleDays.get(event.id) === day) continue;
+            scheduleDays.set(event.id, day);
+            // Apply each day's default once; manual choices remain usable that day.
+            configuration.onChange(event.id, defaultEnabled(event));
+        }
+        update();
+        scheduleTimer = setTimeout(refreshSchedule, 60000 - Date.now() % 60000 + 20);
+    }
+    function badgeText(event) {
+        if (scheduled(event)) return `${defaultEnabled(event) ? 'Concert day · on by default (CET)' : 'Optional · concert-day defaults (CET)'}${event.auras.length ? '' : ' · Aura details pending'}`;
+        return event.status === 'upcoming' ? 'Upcoming' : locked(event) ? 'Live · stays enabled until the event ends' : event.status === 'active' ? 'Live' : 'Historical';
+    }
     function update() {
         if (!configuration) return;
         const { events, enabled, summary, reset, status } = configuration;
@@ -18,10 +56,11 @@
         reset.textContent = optional.length === 1 ? `Turn off ${optional[0].label}` : 'Reset events';
         reset.title = optional.length === 1 ? `Turn off ${optional[0].label}.` : 'Turn off optional events; live default events stay enabled.';
         status.textContent = `${selected.length} enabled${selected.some(locked) ? ' · Live events stay on until they end.' : ''}`;
-        for (const { event, input, row } of rows) {
+        for (const { event, input, row, badge } of rows) {
             input.checked = enabled.has(event.id);
             input.disabled = event.status === 'upcoming' || locked(event);
             row.classList.toggle('interface-select__option--active', input.checked);
+            badge.textContent = badgeText(event);
         }
     }
     function initialize({ events, enabled, onChange }) {
@@ -34,14 +73,16 @@
         const status = document.getElementById('event-selection-status');
         if (!details || !menu || configuration) return;
         configuration = { events, enabled, onChange, summary, reset, status };
-        const years = [...new Set(events.map(event => event.label.match(/\d{4}$/)?.[0]))].sort().reverse();
+        const eventYears = new Map(events.map(event => [event.id, yearsForEvent(event)]));
+        const years = [...new Set([...eventYears.values()].flat())].sort().reverse();
         groups = years.map(year => {
             const fieldset = document.createElement('fieldset');
             fieldset.className = 'event-picker__year';
             const legend = document.createElement('legend');
             legend.textContent = year;
             fieldset.append(legend);
-            const entries = events.filter(event => event.label.endsWith(year)).sort((a, b) => Number(locked(b)) - Number(locked(a)) || b.order - a.order);
+            const entries = events.filter(event => eventYears.get(event.id).includes(year))
+                .sort((a, b) => Number(locked(b)) - Number(locked(a)) || b.order - a.order);
             for (const event of entries) {
                 const row = document.createElement('label');
                 row.className = 'interface-select__option interface-select__option--checkbox event-picker__option';
@@ -55,14 +96,14 @@
                 name.className = event.sigilClass;
                 name.textContent = event.label;
                 const badge = document.createElement('small');
-                badge.id = `event-status-${event.id}`;
-                badge.textContent = event.status === 'upcoming' ? 'Upcoming' : locked(event) ? 'Live · stays enabled until the event ends' : event.status === 'active' ? 'Live' : 'Historical';
+                badge.id = `event-status-${event.id}-${year}`;
+                badge.textContent = badgeText(event);
                 input.setAttribute('aria-describedby', badge.id);
                 input.setAttribute('aria-label', event.label);
                 text.append(name, badge);
                 row.append(input, text);
                 input.addEventListener('change', () => { onChange(event.id, input.checked); update(); });
-                rows.push({ event, input, row });
+                rows.push({ event, input, row, badge, searchText: `${event.label} ${year} ${event.status}`.toLowerCase() });
                 fieldset.append(row);
             }
             return fieldset;
@@ -84,8 +125,8 @@
             panel.style.maxWidth = `${Math.max(180, innerWidth - bounds.left - 12)}px`;
         };
         const filter = () => {
-            const query = search.value.trim().toLowerCase();
-            for (const { event, row } of rows) row.hidden = !`${event.label} ${event.status}`.toLowerCase().includes(query);
+            const terms = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+            for (const { row, searchText } of rows) row.hidden = !terms.every(term => searchText.includes(term));
             for (const group of groups) group.hidden = ![...group.querySelectorAll('label')].some(row => !row.hidden);
             document.getElementById('event-no-matches').hidden = groups.some(group => !group.hidden);
         };
@@ -113,7 +154,13 @@
             available[next].focus();
         });
         details.addEventListener('focusout', event => { if (event.relatedTarget && !details.contains(event.relatedTarget)) close(); });
+        if (events.some(scheduled)) {
+            refreshSchedule();
+            window.addEventListener('focus', refreshSchedule);
+            window.addEventListener('pageshow', refreshSchedule);
+            document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshSchedule(); });
+        }
         update();
     }
-    globalThis.EventControls = Object.freeze({ initialize, update, locked });
+    globalThis.EventControls = Object.freeze({ initialize, update, locked, defaultEnabled, dateKey, refreshSchedule });
 })();

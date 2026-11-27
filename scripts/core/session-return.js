@@ -45,6 +45,8 @@
                     return [id, element?.type === 'checkbox' ? element.checked : element?.value];
                 })),
                 events: [...enabledEvents], gear: { ...equippedGear },
+                eventDefaultDates: Object.fromEntries(EVENT_LIST.filter(event => event.defaultEnabledDates)
+                    .map(event => [event.id, EventControls.dateKey(event)])),
                 baseLuck, singleSpecialLuck, additionalBasicBuffs, currentLuckSelectionSource,
                 potionMode: potionSimulationMode, method: simulationMethod,
                 rolls: getNumericInputValue(document.getElementById('roll-total'), { min: 0 }),
@@ -159,9 +161,10 @@
             const dev = document.getElementById('dev-biomes-toggle');
             dev.checked = setup.controls['dev-biomes-toggle'] === true;
             dev.dispatchEvent(new Event('change', { bubbles: true }));
-            document.querySelectorAll('[data-event-id]').forEach(input => {
-                setEventToggleState(input.dataset.eventId, Array.isArray(setup.events) && setup.events.includes(input.dataset.eventId));
-            });
+            for (const event of EVENT_LIST) {
+                if (event.defaultEnabledDates && setup.eventDefaultDates?.[event.id] !== EventControls.dateKey(event)) continue;
+                setEventToggleState(event.id, Array.isArray(setup.events) && setup.events.includes(event.id));
+            }
             for (const [slot, items] of Object.entries(GearLuck.catalog)) {
                 equippedGear[slot] = items.some(item => item.id === setup.gear?.[slot]) ? setup.gear[slot] : 'none';
             }

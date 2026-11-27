@@ -2718,7 +2718,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     border-left-color: rgb(var(--accent-rgb) / 0.72);
     background:
         linear-gradient(90deg, rgb(var(--accent-rgb) / 0.09), transparent 42%),
-        rgba(5, 12, 24, 0.46);
+        rgb(5 12 24 / calc(0.46 * var(--card-fill-opacity, 1)));
     box-shadow:
         inset 3px 0 0 rgb(var(--accent-rgb) / 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.025);
@@ -2861,7 +2861,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     padding: 0;
     border: 1px solid rgb(var(--accent-rgb) / 0.22);
     background:
-        linear-gradient(180deg, rgb(var(--accent-rgb) / 0.08), rgba(4, 10, 22, 0.68));
+        linear-gradient(180deg, rgb(var(--accent-rgb) / 0.08), rgb(4 10 22 / calc(0.68 * var(--card-fill-opacity, 1))));
     box-shadow: inset 0 0 18px rgb(var(--accent-rgb) / 0.08);
     cursor: pointer;
     overflow: hidden;
@@ -2891,7 +2891,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     gap: 12px;
     padding: clamp(12px, 2vw, 16px);
     background:
-        linear-gradient(180deg, rgb(var(--accent-rgb) / 0.1), rgba(4, 10, 22, 0.72));
+        linear-gradient(180deg, rgb(var(--accent-rgb) / 0.1), rgb(4 10 22 / calc(0.72 * var(--card-fill-opacity, 1))));
 }
 
 .changelog-subupdate-card__header {
@@ -3099,7 +3099,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     border-left: 2px solid rgba(255, 91, 48, 0.62);
     background:
         linear-gradient(110deg, rgba(119, 13, 2, 0.18), transparent 58%),
-        rgba(10, 6, 10, 0.58);
+        rgb(10 6 10 / calc(0.58 * var(--card-fill-opacity, 1)));
     box-shadow: inset 0 0 18px rgba(255, 77, 35, 0.035);
 }
 
@@ -3108,7 +3108,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     border-left-color: #ff7044;
     background:
         linear-gradient(110deg, rgba(139, 18, 4, 0.23), transparent 60%),
-        rgba(13, 7, 11, 0.66);
+        rgb(13 7 11 / calc(0.66 * var(--card-fill-opacity, 1)));
 }
 
 .changelog-eon128-aura-card__name {
@@ -3812,7 +3812,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     border-color: rgba(105, 236, 174, 0.68);
     background:
         radial-gradient(circle at 0 50%, rgba(105, 236, 174, 0.12), transparent 48%),
-        linear-gradient(155deg, rgba(15, 52, 43, 0.92), rgba(4, 18, 20, 0.96));
+        linear-gradient(155deg, rgb(15 52 43 / calc(0.92 * var(--card-fill-opacity, 1))), rgb(4 18 20 / calc(0.96 * var(--card-fill-opacity, 1))));
 }
 
 .filter-modal__grid {
@@ -3877,6 +3877,122 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     font-size: clamp(12px, 1.7vw, 14px);
 }
 
+.photosensitivity-note {
+    color: #f6d9b0;
+    border-left-color: #e9b779;
+    background: linear-gradient(90deg, #87602a31, #080e1d 70%);
+    font-size: clamp(12px, 1.7vw, 14px);
+}
+
+.photosensitivity-warning {
+    --warning-accent: #f0bf77;
+    position: fixed;
+    inset: 0;
+    width: min(520px, calc(100vw - 32px));
+    max-width: none;
+    height: fit-content;
+    max-height: calc(100dvh - 32px);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
+    color: #eaf2ff;
+    border: 1px solid #c4a2727d;
+    background:
+        linear-gradient(var(--warning-accent), var(--warning-accent)) top left / 26px 2px no-repeat,
+        linear-gradient(var(--warning-accent), var(--warning-accent)) top left / 2px 26px no-repeat,
+        linear-gradient(var(--warning-accent), var(--warning-accent)) bottom right / 26px 2px no-repeat,
+        linear-gradient(var(--warning-accent), var(--warning-accent)) bottom right / 2px 26px no-repeat,
+        radial-gradient(ellipse at 0% 4%, #9d69232b, transparent 62%),
+        linear-gradient(155deg, rgb(17 29 50 / var(--card-fill-opacity, 1)), rgb(7 13 28 / var(--card-fill-opacity, 1)) 72%);
+    box-shadow: 0 32px 100px #000b, 0 0 32px #e4a34b19;
+}
+
+.photosensitivity-warning::backdrop {
+    background: #030815aa;
+    backdrop-filter: blur(13px) saturate(.66);
+}
+
+body:has(.photosensitivity-warning[open]) { overflow: hidden; }
+body:has(.photosensitivity-warning[open]) *,
+body:has(.photosensitivity-warning[open]) *::before,
+body:has(.photosensitivity-warning[open]) *::after { animation-play-state: paused !important; }
+
+.photosensitivity-warning__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: clamp(19px, 4vw, 27px);
+    border-bottom: 1px solid #cf9f5938;
+}
+
+.photosensitivity-warning__header h2 {
+    margin: 0;
+    color: #ffedcf;
+    font-size: clamp(1.16rem, 4vw, 1.62rem);
+    line-height: 1.2;
+    letter-spacing: .04em;
+}
+
+.photosensitivity-warning__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 46px;
+    aspect-ratio: 1;
+    border: 1px solid #f0bf7799;
+    background: linear-gradient(140deg, #92612c44, #142037);
+    color: var(--warning-accent);
+    font: 700 1.4rem/1 'Segoe UI', sans-serif;
+}
+
+.photosensitivity-warning__body {
+    display: grid;
+    gap: 18px;
+    padding: clamp(19px, 4vw, 27px);
+}
+
+.photosensitivity-warning__body p {
+    margin: 0;
+    color: #d4dfef;
+    font-size: clamp(.9rem, 2.9vw, 1rem);
+    line-height: 1.65;
+}
+
+.photosensitivity-warning__body .photosensitivity-warning__preferences {
+    padding: 11px 13px;
+    border-left: 2px solid #cda06c;
+    background: #d4974820;
+    color: #eadad0;
+    font-size: .84rem;
+}
+
+.photosensitivity-warning__actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 clamp(19px, 4vw, 27px) clamp(19px, 4vw, 27px);
+}
+
+.photosensitivity-warning__actions .interface-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 46px;
+    border-color: #ecc48f80;
+    background: linear-gradient(135deg, #4e3821, #242338);
+    color: #fff0d7;
+}
+
+.photosensitivity-warning__actions .interface-button:focus-visible {
+    outline: 2px solid var(--warning-accent);
+    outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+    .photosensitivity-warning__actions .interface-button { width: 100%; }
+}
+
 .cutscene-warning__note {
     color: var(--popup-accent);
     letter-spacing: 0.08em;
@@ -3922,7 +4038,7 @@ body.quality-no-ui-animations .audio-slider__input::-moz-range-thumb {
     padding: 14px 12px 28px;
     background:
         linear-gradient(145deg, rgb(var(--popup-accent-rgb) / 0.045), transparent 42%),
-        rgba(2, 7, 16, 0.48);
+        rgb(2 7 16 / calc(0.48 * var(--card-fill-opacity, 1)));
     border: 1px solid rgb(var(--popup-accent-rgb) / 0.12);
 }
 
@@ -4227,7 +4343,7 @@ body.quality-no-ui-animations .cutscene-warning-overlay[data-closing] .surface--
     display: grid;
     min-width: 0;
     min-height: 0;
-    background: rgba(2, 8, 18, 0.72);
+    background: rgb(2 8 18 / calc(0.72 * var(--card-fill-opacity, 1)));
     border: 1px solid rgb(var(--feed-console-accent-rgb) / 0.2);
     box-shadow: inset 0 0 28px rgb(var(--feed-console-accent-rgb) / 0.055);
 }
@@ -4272,7 +4388,7 @@ body.quality-no-ui-animations .cutscene-warning-overlay[data-closing] .surface--
     background:
         linear-gradient(90deg, rgb(var(--feed-console-accent-rgb) / 0.022) 1px, transparent 1px) 0 0 / 18px 18px,
         linear-gradient(0deg, rgb(var(--feed-console-accent-rgb) / 0.018) 1px, transparent 1px) 0 0 / 18px 18px,
-        linear-gradient(180deg, rgb(var(--feed-console-accent-rgb) / 0.045), rgba(2, 7, 16, 0.96));
+        linear-gradient(180deg, rgb(var(--feed-console-accent-rgb) / 0.045), rgb(2 7 16 / calc(0.96 * var(--card-fill-opacity, 1))));
     box-shadow: inset 0 18px 30px rgba(0, 0, 0, 0.18);
     scrollbar-gutter: stable;
 }
@@ -4984,7 +5100,7 @@ body.help-center-open {
     border: 1px solid rgba(112, 205, 242, 0.13);
     background:
         linear-gradient(110deg, rgba(62, 154, 198, 0.07), transparent 46%),
-        rgba(5, 14, 27, 0.72);
+        rgb(5 14 27 / calc(0.72 * var(--card-fill-opacity, 1)));
     scroll-margin-top: 14px;
 }
 
@@ -6183,7 +6299,7 @@ body.quality-no-ui-animations .help-center__backdrop {
 .footer-credits__item:hover {
     border-color: rgba(116, 203, 239, 0.26);
     color: #b9ceda;
-    background: rgba(16, 34, 50, 0.7);
+    background: rgb(16 34 50 / calc(0.7 * var(--card-fill-opacity, 1)));
 }
 
 .footer-credits__item[hidden] {
@@ -6221,7 +6337,7 @@ body.quality-no-ui-animations .help-center__backdrop {
         radial-gradient(circle at 0 0, rgba(79, 203, 255, 0.18), transparent 38%),
         radial-gradient(circle at 100% 0, rgba(132, 111, 255, 0.16), transparent 38%),
         repeating-linear-gradient(90deg, transparent 0 44px, rgba(125, 218, 255, 0.024) 44px 45px),
-        rgba(5, 13, 27, 0.88);
+        rgb(5 13 27 / calc(0.88 * var(--card-fill-opacity, 1)));
     box-shadow:
         inset 3px 0 0 rgba(120, 220, 255, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.05),
@@ -6329,7 +6445,7 @@ body.quality-no-ui-animations .help-center__backdrop {
         radial-gradient(circle at 0 0, rgba(242, 218, 68, 0.16), transparent 36%),
         radial-gradient(circle at 100% 0, rgba(70, 194, 220, 0.13), transparent 42%),
         repeating-linear-gradient(90deg, transparent 0 44px, rgba(237, 224, 91, 0.022) 44px 45px),
-        rgba(5, 13, 25, 0.82);
+        rgb(5 13 25 / calc(0.82 * var(--card-fill-opacity, 1)));
     box-shadow:
         inset 3px 0 0 rgba(239, 225, 104, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.045);
@@ -7332,6 +7448,7 @@ body.quality-no-ui-animations .help-tour-target {
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7343,6 +7460,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7351,6 +7469,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7362,6 +7481,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7373,6 +7493,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7384,6 +7505,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7392,6 +7514,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7407,6 +7530,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7418,6 +7542,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7432,6 +7557,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7449,6 +7575,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7466,6 +7593,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7480,6 +7608,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7494,6 +7623,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7505,6 +7635,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7523,6 +7654,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7534,6 +7666,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7546,6 +7679,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7558,12 +7692,13 @@ body:is(
     .footer-credits__item
 ) {
     border-color: rgb(var(--accent-rgb) / 0.2);
-    background-color: rgb(var(--accent-rgb) / 0.035);
+    background-color: rgb(var(--accent-rgb) / calc(0.035 * var(--card-fill-opacity, 1)));
 }
 
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7585,6 +7720,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7597,6 +7733,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7613,6 +7750,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7626,6 +7764,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7645,6 +7784,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7656,6 +7796,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7669,6 +7810,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7686,6 +7828,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7698,6 +7841,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7706,6 +7850,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7717,6 +7862,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7732,6 +7878,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7744,6 +7891,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7762,6 +7910,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7781,6 +7930,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7797,6 +7947,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7808,6 +7959,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7817,12 +7969,13 @@ body:is(
     background:
         radial-gradient(circle at 0 0, rgb(var(--accent-rgb) / 0.15), transparent 40%),
         linear-gradient(110deg, rgb(var(--event-secondary-rgb) / 0.08), transparent 52%),
-        rgba(5, 14, 27, 0.78);
+        rgb(5 14 27 / calc(0.78 * var(--card-fill-opacity, 1)));
 }
 
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7846,6 +7999,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7864,6 +8018,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7876,6 +8031,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7893,6 +8049,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7907,6 +8064,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7922,6 +8080,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7944,6 +8103,7 @@ body:is(
 body:is(
     .theme-event-valentine,
     .theme-event-april-fools,
+    .theme-event-ado,
     .theme-event-halloween,
     .theme-event-summer,
     .theme-event-easter,
@@ -7975,7 +8135,7 @@ body.theme-event-april-fools .april-fools-copy {
         radial-gradient(circle at 0 0, rgba(255, 221, 110, 0.1), transparent 32%),
         radial-gradient(circle at 100% 0, rgba(168, 119, 255, 0.13), transparent 38%),
         repeating-linear-gradient(90deg, transparent 0 44px, rgba(160, 218, 255, 0.02) 44px 45px),
-        rgba(5, 12, 24, 0.84);
+        rgb(5 12 24 / calc(0.84 * var(--card-fill-opacity, 1)));
     box-shadow:
         inset 3px 0 0 rgba(174, 157, 255, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.045);
@@ -8018,7 +8178,7 @@ body.theme-event-april-fools .april-fools-copy {
     border: 1px solid rgb(var(--event-card-rgb) / 0.2);
     background:
         linear-gradient(110deg, rgb(var(--event-card-rgb) / 0.09), transparent 48%),
-        rgba(4, 11, 22, 0.6);
+        rgb(4 11 22 / calc(0.6 * var(--card-fill-opacity, 1)));
     color: #8fa7b6;
     font-size: 9px;
     line-height: 1.5;
